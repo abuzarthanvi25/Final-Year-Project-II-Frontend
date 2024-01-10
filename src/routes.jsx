@@ -15,6 +15,7 @@ const icon = {
 
 export const routes = [
   {
+    title: "Home",
     layout: "dashboard",
     pages: [
       {
@@ -22,7 +23,13 @@ export const routes = [
         name: "dashboard",
         path: "/home",
         element: <Home />,
-      },
+      }
+    ],
+  },
+  {
+    title: 'Profile',
+    layout: 'dashboard',
+    pages: [
       {
         icon: <UserCircleIcon {...icon} />,
         name: "profile",
@@ -30,36 +37,54 @@ export const routes = [
         element: <Profile />,
       },
       {
-        icon: <TableCellsIcon {...icon} />,
-        name: "tables",
-        path: "/tables",
-        element: <Tables />,
-      },
-      {
         icon: <InformationCircleIcon {...icon} />,
         name: "notifications",
         path: "/notifications",
         element: <Notifications />,
       },
-    ],
+    ]
   },
   {
-    title: "auth pages",
-    layout: "auth",
+    title: 'Study Material',
+    layout: 'dashboard',
     pages: [
       {
-        icon: <ServerStackIcon {...icon} />,
-        name: "sign in",
-        path: "/sign-in",
-        element: <SignIn />,
+        icon: <UserCircleIcon {...icon} />,
+        name: "Notes",
+        path: "/profile",
+        element: <Profile />,
       },
       {
-        icon: <RectangleStackIcon {...icon} />,
-        name: "sign up",
-        path: "/sign-up",
-        element: <SignUp />,
+        icon: <UserCircleIcon {...icon} />,
+        name: "Images",
+        path: "/profile",
+        element: <Profile />,
       },
-    ],
+      {
+        icon: <UserCircleIcon {...icon} />,
+        name: "Summaries",
+        path: "/profile",
+        element: <Profile />,
+      },
+    ]
+  },
+  {
+    title: 'Collaboration',
+    layout: 'dashboard',
+    pages: [
+      {
+        icon: <InformationCircleIcon {...icon} />,
+        name: "Group Projects",
+        path: "/notifications",
+        element: <Notifications />,
+      },
+      {
+        icon: <InformationCircleIcon {...icon} />,
+        name: "Chats",
+        path: "/notifications",
+        element: <Notifications />,
+      },
+    ]
   },
 ];
 

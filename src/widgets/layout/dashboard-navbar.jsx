@@ -19,6 +19,7 @@ import {
   ClockIcon,
   CreditCardIcon,
   Bars3Icon,
+  UserIcon,
 } from "@heroicons/react/24/solid";
 import {
   useMaterialTailwindController,
@@ -30,8 +31,12 @@ export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { fixedNavbar, openSidenav } = controller;
   const { pathname } = useLocation();
-  const navigation = useNavigate()
+  const navigate = useNavigate();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
+
+  const handleLogout = () => {
+    navigate("/")
+  }
 
   return (
     <Navbar
@@ -51,7 +56,7 @@ export function DashboardNavbar() {
               fixedNavbar ? "mt-1" : ""
             }`}
           >
-            <Link to={`/${layout}`}>
+            <Link to={`/${layout}/home`}>
               <Typography
                 variant="small"
                 color="blue-gray"
@@ -159,13 +164,42 @@ export function DashboardNavbar() {
               </MenuItem>
             </MenuList>
           </Menu>
-          <IconButton
-            variant="text"
-            color="red"
-            // onClick={() => navigation('/profile')}
-          >
-            Logout
-          </IconButton>
+          <Menu animate={{mount: { y: 0 },unmount: { y: 25 }}} placement='right-start'>
+            <MenuHandler>
+              <IconButton variant="text" color="blue-gray">
+                <UserIcon className="h-5 w-5 text-blue-gray-500" />
+              </IconButton>
+            </MenuHandler>
+            <MenuList className="w-max border-0">
+              <MenuItem className="flex items-center gap-3">
+                <Avatar
+                  src="https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"
+                  alt="item-1"
+                  size="sm"
+                  variant="circular"
+                />
+                <div>
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="mb-1 font-normal"
+                  >
+                    <strong>Abuzar</strong>
+                  </Typography>
+                  <Typography
+                    variant="paragraph"
+                    color="blue-gray"
+                    className="flex items-center gap-1 text-xs font-normal opacity-60"
+                  >
+                    Student
+                  </Typography>
+                </div>
+              </MenuItem>
+              <MenuItem onClick={handleLogout} className='bg-black text-center font-bold text-white'>
+                Logout
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </div>
       </div>
     </Navbar>

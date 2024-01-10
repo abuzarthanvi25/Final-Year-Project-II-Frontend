@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { Link, NavLink } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
-  Avatar,
   Button,
   IconButton,
   Typography,
@@ -22,29 +21,26 @@ export function Sidenav({ brandImg, brandName, routes }) {
     <aside
       className={`${sidenavTypes[sidenavType]} ${
         openSidenav ? "translate-x-0" : "-translate-x-80"
-      } fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0 border border-blue-gray-100`}
+      } fixed overflow-auto inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0 border border-blue-gray-100`}
     >
       <div
         className={`relative`}
       >
-        <Link to="/" className="py-6 px-8 text-center">
           <Typography
             variant="h6"
+            className="py-6 px-8 text-center flex justify-center items-center"
             color={sidenavType === "dark" ? "white" : "blue-gray"}
           >
             {brandName}
+            <IconButton
+            variant="text"
+            color="blue-gray"
+            className="grid xl:hidden ms-3"
+            onClick={() => setOpenSidenav(dispatch, !openSidenav)}
+          >
+            <XMarkIcon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
+          </IconButton>
           </Typography>
-        </Link>
-        <IconButton
-          variant="text"
-          color="white"
-          size="sm"
-          ripple={false}
-          className="absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden"
-          onClick={() => setOpenSidenav(dispatch, false)}
-        >
-          <XMarkIcon strokeWidth={2.5} className="h-5 w-5 text-white" />
-        </IconButton>
       </div>
       <div className="m-4">
         {routes.map(({ layout, title, pages }, key) => (
@@ -66,13 +62,6 @@ export function Sidenav({ brandImg, brandName, routes }) {
                   {({ isActive }) => (
                     <Button
                       variant={isActive ? "gradient" : "text"}
-                      color={
-                        isActive
-                          ? sidenavColor
-                          : sidenavType === "dark"
-                          ? "white"
-                          : "blue-gray"
-                      }
                       className="flex items-center gap-4 px-4 capitalize"
                       fullWidth
                     >
@@ -81,7 +70,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
                         color="inherit"
                         className="font-medium capitalize"
                       >
-                        {name}
+                        {name?.length > 15 ? name?.slice(15) + '...' : name}
                       </Typography>
                     </Button>
                   )}
