@@ -27,7 +27,7 @@ const OfflineNotifier = () => {
   }
 
   return (
-    <div className="fixed opacity-75 bg-white z-20 hidden mx-auto bottom-10 left-0 right-0 w-fit md:block">
+    <div className="fixed opacity-80 bg-white z-20 hidden mx-auto bottom-10 left-0 right-0 w-fit md:block">
       <Typography
         variant="paragraph"
         color={"white"}

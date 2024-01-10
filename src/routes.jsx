@@ -1,13 +1,11 @@
 import {
   HomeIcon,
   UserCircleIcon,
-  TableCellsIcon,
-  InformationCircleIcon,
-  ServerStackIcon,
-  RectangleStackIcon,
+  FolderIcon,
+  UserGroupIcon,
+  ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
-import { SignIn, SignUp } from "@/pages/auth";
+import { Home, Profile, Courses, GroupProjects, Chats } from "@/pages/dashboard";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -36,12 +34,6 @@ export const routes = [
         path: "/profile",
         element: <Profile />,
       },
-      {
-        icon: <InformationCircleIcon {...icon} />,
-        name: "notifications",
-        path: "/notifications",
-        element: <Notifications />,
-      },
     ]
   },
   {
@@ -49,22 +41,10 @@ export const routes = [
     layout: 'dashboard',
     pages: [
       {
-        icon: <UserCircleIcon {...icon} />,
-        name: "Notes",
-        path: "/profile",
-        element: <Profile />,
-      },
-      {
-        icon: <UserCircleIcon {...icon} />,
-        name: "Images",
-        path: "/profile",
-        element: <Profile />,
-      },
-      {
-        icon: <UserCircleIcon {...icon} />,
-        name: "Summaries",
-        path: "/profile",
-        element: <Profile />,
+        icon: <FolderIcon {...icon} />,
+        name: "Courses",
+        path: "/courses",
+        element: <Courses />,
       },
     ]
   },
@@ -73,16 +53,16 @@ export const routes = [
     layout: 'dashboard',
     pages: [
       {
-        icon: <InformationCircleIcon {...icon} />,
+        icon: <UserGroupIcon {...icon} />,
         name: "Group Projects",
-        path: "/notifications",
-        element: <Notifications />,
+        path: "/group-projects",
+        element: <GroupProjects />,
       },
       {
-        icon: <InformationCircleIcon {...icon} />,
+        icon: <ChatBubbleLeftEllipsisIcon {...icon} />,
         name: "Chats",
-        path: "/notifications",
-        element: <Notifications />,
+        path: "/chats",
+        element: <Chats />,
       },
     ]
   },
