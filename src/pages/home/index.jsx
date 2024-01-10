@@ -17,12 +17,12 @@ export function Home() {
             <div className="container absolute left-2/4 z-10 mx-auto -translate-x-2/4 p-4">
                 <Navbar routes={[
                     {
-                        name: "Sign In",
+                        name: "Login",
                         path: "/sign-in",
                         element: <SignIn />,
                     },
                     {
-                        name: "Sign Up",
+                        name: "Register",
                         path: "/sign-up",
                         element: <SignUp />,
                     },

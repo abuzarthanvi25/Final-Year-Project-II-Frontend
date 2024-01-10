@@ -1,11 +1,10 @@
 export const projectsData = [
   {
     img: "/img/home-decor-1.jpeg",
-    title: "Modern",
+    title: "Operations Reserch",
     tag: "Project #1",
     description:
-      "As Uber works through a huge amount of internal management turmoil.",
-    route: "/dashboard/profile",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in efficitur tellus.",
     members: [
       { img: "/img/team-1.jpeg", name: "Romina Hadid" },
       { img: "/img/team-2.jpeg", name: "Ryan Tompson" },
@@ -15,10 +14,10 @@ export const projectsData = [
   },
   {
     img: "/img/home-decor-2.jpeg",
-    title: "Scandinavian",
+    title: "Risk Management",
     tag: "Project #2",
     description:
-      "Music is something that every person has his or her own specific opinion about.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in efficitur tellus.",
     route: "/dashboard/profile",
     members: [
       { img: "/img/team-4.jpeg", name: "Alexander Smith" },
@@ -29,10 +28,10 @@ export const projectsData = [
   },
   {
     img: "/img/home-decor-3.jpeg",
-    title: "Minimalist",
+    title: "Software Testing",
     tag: "Project #3",
     description:
-      "Different people have different taste, and various types of music.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in efficitur tellus.",
     route: "/dashboard/profile",
     members: [
       { img: "/img/team-1.jpeg", name: "Romina Hadid" },
@@ -43,10 +42,10 @@ export const projectsData = [
   },
   {
     img: "/img/home-decor-4.jpeg",
-    title: "Gothic",
+    title: "Numerical Analysis",
     tag: "Project #4",
     description:
-      "Why would anyone pick blue over pink? Pink is obviously a better color.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce in efficitur tellus.",
     route: "/dashboard/profile",
     members: [
       { img: "/img/team-4.jpeg", name: "Alexander Smith" },

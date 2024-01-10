@@ -47,7 +47,7 @@ export function Profile() {
                   variant="small"
                   className="font-normal text-blue-gray-600"
                 >
-                  CEO / Co-Founder
+                  Student
                 </Typography>
               </div>
             </div>
@@ -56,11 +56,7 @@ export function Profile() {
                 <TabsHeader>
                   <Tab value="app">
                     <HomeIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-                    App
-                  </Tab>
-                  <Tab value="message">
-                    <ChatBubbleLeftEllipsisIcon className="-mt-0.5 mr-2 inline-block h-5 w-5" />
-                    Message
+                    Details
                   </Tab>
                   <Tab value="settings">
                     <Cog6ToothIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
@@ -70,8 +66,8 @@ export function Profile() {
               </Tabs>
             </div>
           </div>
-          <div className="gird-cols-1 mb-12 grid gap-12 px-4 lg:grid-cols-2 xl:grid-cols-3">
-            <div>
+          <div className="gird-cols-1 mb-12 grid gap-12 px-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+            {/* <div>
               <Typography variant="h6" color="blue-gray" className="mb-3">
                 Platform Settings
               </Typography>
@@ -97,7 +93,7 @@ export function Profile() {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
             <ProfileInfoCard
               title="Profile Information"
               description="Hi, I'm Alec Thompson, Decisions: If you can't decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
@@ -122,7 +118,7 @@ export function Profile() {
             />
             <div>
               <Typography variant="h6" color="blue-gray" className="mb-3">
-                Platform Settings
+                Friends
               </Typography>
               <ul className="flex flex-col gap-6">
                 {conversationsData.map((props) => (
@@ -141,13 +137,13 @@ export function Profile() {
           </div>
           <div className="px-4 pb-4">
             <Typography variant="h6" color="blue-gray" className="mb-2">
-              Projects
+              PersonalProjects
             </Typography>
             <Typography
               variant="small"
               className="font-normal text-blue-gray-500"
             >
-              Architects design houses
+              Personal Projects Completed
             </Typography>
             <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-4">
               {projectsData.map(
