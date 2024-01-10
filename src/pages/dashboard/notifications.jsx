@@ -26,7 +26,8 @@ export function Notifications() {
   return (
     <div className="mx-auto my-20 flex max-w-screen-lg flex-col gap-8">
       <Card>
-        <CardHeader
+        <></>
+        {/* <CardHeader
           color="transparent"
           floated={false}
           shadow={false}
@@ -79,7 +80,7 @@ export function Notifications() {
               it a click if you like.
             </Alert>
           ))}
-        </CardBody>
+        </CardBody> */}
       </Card>
     </div>
   );
