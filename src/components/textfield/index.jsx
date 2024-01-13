@@ -3,6 +3,12 @@ import { Input, Typography } from "@material-tailwind/react";
 export function Textfield({ inputLabel = '', helperText = '', error = false, ...rest }) {
     return (
         <div>
+            {
+                !!inputLabel &&
+            <Typography variant="small" color="blue-gray" className="mb-3 font-medium">
+              {inputLabel}
+            </Typography>
+            }
             <Input className= {`!border-t-blue-gray-200 focus:!border-t-gray-900`}
                 labelProps={{
                     className: "before:content-none after:content-none",

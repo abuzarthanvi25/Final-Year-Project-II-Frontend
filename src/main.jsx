@@ -6,12 +6,14 @@ import { ThemeProvider } from "@material-tailwind/react";
 import { MaterialTailwindControllerProvider } from "@/context";
 import "../public/css/tailwind.css";
 import OfflineNotifier from "./widgets/custom-widgets/offline-notifier";
+import Toast from './components/toasts';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
         <OfflineNotifier/>
+        <Toast/>
         <MaterialTailwindControllerProvider>
           <App />
         </MaterialTailwindControllerProvider>

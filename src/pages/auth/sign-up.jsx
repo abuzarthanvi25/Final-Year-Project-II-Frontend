@@ -1,18 +1,64 @@
-import { Textfield } from '@/components/textfield';
+import { loginUserRequest } from '../../store/reducers/auth-reducer';
 import {
-  Card,
-  Input,
   Checkbox,
   Button,
-  Typography,
 } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
+import { useFormik } from 'formik';
+import { Link, useNavigate } from "react-router-dom";
+import { unwrapResult } from '@reduxjs/toolkit'
+import { authInitialValues, authValidationSchema } from '@/utils/validations/auth-validations';
+import { showFaliureToast, showSuccessToast } from '@/utils/toast-helpers';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { useState } from 'react';
 
 
 export function SignUp() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [iAgree, setIAgree] = useState(false);
+  const [values, setValues] = useState({
+    showPassword: false
+  })
+
+  const handleClickShowPassword = () => {
+    setValues({ showPassword: !values.showPassword })
+  }
+
+  const handleMouseDownPassword = event => {
+    event.preventDefault()
+  }
+
+  const handleSignUp = (body) => {
+    setLoading(true)
+
+      dispatch(loginUserRequest({ body }))
+        .then(unwrapResult)
+        .then(res => {
+          showSuccessToast(res?.data?.message)
+          navigate('/dashboard/home')
+          setLoading(false)
+        })
+        .catch(err => {
+          showFaliureToast(err?.response?.data?.message)
+          setLoading(false)
+        })
+  }
+
+
+  const formik = useFormik({
+    initialValues: authInitialValues,
+    validationSchema: authValidationSchema,
+    onSubmit: values => {
+      // handleSignUp(values);
+      console.log(values);
+    }
+  })
+
   return (
     <section className="m-8 flex">
-            <div className="w-2/5 h-full hidden lg:block">
+            <div style={{height: '90vh'}} className="w-2/5 hidden lg:block">
         <img
           src="/img/pattern.png"
           className="h-full w-full object-cover rounded-3xl"
@@ -23,25 +69,56 @@ export function SignUp() {
           <Typography variant="h2" className="font-bold mb-4">Join Us Today</Typography>
           <Typography variant="paragraph" color="blue-gray" className="text-lg font-normal">Enter your email and password to register.</Typography>
         </div>
-        <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">
-          <div className="mb-1 flex flex-col gap-6">
-            <Typography variant="small" color="blue-gray" className="-mb-3 font-medium">
-              Your email
+        <form onSubmit={formik.handleSubmit} className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">
+          <div className="mb-1 flex flex-col">
+          <TextField
+            fullWidth
+            id='email'
+            label='Email'
+            variant='outlined'
+            size='small' // Added to make the field smaller
+            sx={{ marginBottom: 4 }}
+            {...formik.getFieldProps('email')}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+        />
+            <FormControl fullWidth>
+          <InputLabel
+            size='small'
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            htmlFor='auth-login-password'
+          >
+            Password
+          </InputLabel>
+          <OutlinedInput
+            label='Password'
+            id='auth-login-password'
+            type={values.showPassword ? 'text' : 'password'}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            {...formik.getFieldProps('password')}
+            size='small' // Added to make the field smaller
+            endAdornment={
+              <InputAdornment position='end'>
+                <IconButton
+                  edge='end'
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  aria-label='toggle password visibility'
+                >
+                  {values.showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          {formik.touched.password && formik.errors.password && (
+            <Typography style={{ margin: '3px 14px 0px' }} variant='caption' color='error'>
+              {formik.errors.password}
             </Typography>
-            <Textfield
-              size="lg"
-              placeholder="name@mail.com"
-            />
-             <Typography variant="small" color="blue-gray" className="-mb-3 font-medium">
-              Password
-            </Typography>
-            <Textfield
-              type="password"
-              size="lg"
-              placeholder="********"
-            />
+          )}
+        </FormControl>
           </div>
           <Checkbox
+            onChange={(e) => setIAgree(e.target.checked)}
             label={
               <Typography
                 variant="small"
@@ -59,7 +136,7 @@ export function SignUp() {
             }
             containerProps={{ className: "-ml-2.5" }}
           />
-          <Button className="mt-6" fullWidth>
+          <Button disabled={loading || !iAgree} type='submit' className="mt-6" fullWidth>
             Register Now
           </Button>
 
