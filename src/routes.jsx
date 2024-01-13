@@ -1,13 +1,11 @@
 import {
   HomeIcon,
   UserCircleIcon,
-  TableCellsIcon,
-  InformationCircleIcon,
-  ServerStackIcon,
-  RectangleStackIcon,
+  FolderIcon,
+  UserGroupIcon,
+  ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
-import { SignIn, SignUp } from "@/pages/auth";
+import { Home, Profile, Courses, GroupProjects, Chats } from "@/pages/dashboard";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -15,6 +13,7 @@ const icon = {
 
 export const routes = [
   {
+    title: "Home",
     layout: "dashboard",
     pages: [
       {
@@ -22,44 +21,50 @@ export const routes = [
         name: "dashboard",
         path: "/home",
         element: <Home />,
-      },
+      }
+    ],
+  },
+  {
+    title: 'Profile',
+    layout: 'dashboard',
+    pages: [
       {
         icon: <UserCircleIcon {...icon} />,
         name: "profile",
         path: "/profile",
         element: <Profile />,
       },
-      {
-        icon: <TableCellsIcon {...icon} />,
-        name: "tables",
-        path: "/tables",
-        element: <Tables />,
-      },
-      {
-        icon: <InformationCircleIcon {...icon} />,
-        name: "notifications",
-        path: "/notifications",
-        element: <Notifications />,
-      },
-    ],
+    ]
   },
   {
-    title: "auth pages",
-    layout: "auth",
+    title: 'Study Material',
+    layout: 'dashboard',
     pages: [
       {
-        icon: <ServerStackIcon {...icon} />,
-        name: "sign in",
-        path: "/sign-in",
-        element: <SignIn />,
+        icon: <FolderIcon {...icon} />,
+        name: "Courses",
+        path: "/courses",
+        element: <Courses />,
+      },
+    ]
+  },
+  {
+    title: 'Collaboration',
+    layout: 'dashboard',
+    pages: [
+      {
+        icon: <UserGroupIcon {...icon} />,
+        name: "Group Projects",
+        path: "/group-projects",
+        element: <GroupProjects />,
       },
       {
-        icon: <RectangleStackIcon {...icon} />,
-        name: "sign up",
-        path: "/sign-up",
-        element: <SignUp />,
+        icon: <ChatBubbleLeftEllipsisIcon {...icon} />,
+        name: "Chats",
+        path: "/chats",
+        element: <Chats />,
       },
-    ],
+    ]
   },
 ];
 
