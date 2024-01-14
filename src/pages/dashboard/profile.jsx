@@ -14,14 +14,71 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import Details from "@/widgets/custom-widgets/profile/tabs/details";
+import CustomAvatar from "../../components/custom-avatar/index";
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { get } from 'lodash';
+import { getProfileDetailsRequest } from '@/store/reducers/user-reducer';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { showFaliureToast } from '@/utils/toast-helpers';
+import { Skeleton } from '@mui/material';
 
 export function Profile() {
+  const dispatch = useDispatch();
+
+  const [loading, setLoading] = useState(false);
+  const [profileDetailsLocal, setProfileDetailsLocal] = useState(null)
+
+  const {userDetails} = useSelector((state) => state.auth)
+  const {profileDetails} = useSelector((state) => state.user)
+
+  const token = get(userDetails, 'token', null);
+
+  const full_name = get(profileDetailsLocal, "full_name", "");
+  const email = get(profileDetailsLocal, "email", "");
+  const phone_number = get(profileDetailsLocal, "phone_number", "");
+  const bio = get(profileDetailsLocal, "bio", "");
+  const profile_picture = get(profileDetailsLocal, "profile_picture", "");
+  const friends = get(profileDetailsLocal, "friends", []);
+  const courses = get(profileDetailsLocal, "courses", []);
+
+  useEffect(() => {
+    handleGetProfile()
+  }, [])
+
+  useEffect(() => {
+    if(profileDetails){
+      setProfileDetailsLocal(profileDetails);
+    }
+  }, [profileDetails])
+
+  const handleGetProfile = () => {
+    try {
+      if(token){
+        setLoading(true);
+
+        dispatch(getProfileDetailsRequest({token}))
+        .then(unwrapResult)
+        .then(() => {
+          setLoading(false)
+        })
+        .catch(err => {
+          showFaliureToast(err?.response?.data?.message)
+          setLoading(false)
+        })
+
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const tabs = [
     {
       label: "Details",
       value: "details",
       icon: <HomeIcon className="-mt-1 mr-2 inline-block h-5 w-5" />,
-      component: <Details/>
+      component: <Details courses={courses} bio={bio} loading={loading} email={email} friends={friends} full_name={full_name} phone_number={phone_number} />
     },
     {
       label: "Edit Profile",
@@ -41,17 +98,19 @@ export function Profile() {
           <Tabs value="details">
             <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
               <div className="flex items-center gap-6">
-                <Avatar
-                  src="/img/bruce-mars.jpeg"
-                  alt="bruce-mars"
-                  size="xl"
-                  variant="rounded"
-                  className="rounded-lg shadow-lg shadow-blue-gray-500/40"
-                />
+                {
+                  !loading && profile_picture ? 
+                  <CustomAvatar sx={{height: '74px', width: '74px', borderRadius: '8px'}} src={profile_picture ??"/img/bruce-mars.jpeg"} variant="rounded" name='bruce mars' className={"rounded-lg shadow-lg shadow-blue-gray-500/40"} /> :
+                  <Skeleton animation='wave' height={'74px'} width={'74px'} />
+                }
                 <div>
-                  <Typography variant="h5" color="blue-gray" className="mb-1">
-                    Richard Davis
-                  </Typography>
+                  {
+                    !loading && full_name ?
+                    <Typography variant="h5" color="blue-gray" className="mb-1">
+                    {full_name}
+                  </Typography> :
+                  <Skeleton animation='wave' height={'50px'} width={'20ch'} />
+                  }
                   <Typography
                     variant="small"
                     className="font-normal text-blue-gray-600"

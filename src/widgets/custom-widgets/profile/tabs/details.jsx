@@ -10,22 +10,25 @@ import {
     Button,
 } from "@material-tailwind/react";
 import React from 'react'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
 import { conversationsData, projectsData } from "@/data";
+import { truncateString } from '@/utils/helpers';
 
-const Details = () => {
+const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).", full_name = "Alec M. Thompson", email="alecthompson@mail.com", phone_number = "(44) 123 1234 123", friends = conversationsData, loading, courses = []}) => {
+    
+    const navigate = useNavigate();
+
     return (
         <>
             <div className="gird-cols-1 mb-12 grid gap-12 px-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
                 <ProfileInfoCard
                     title="Profile Information"
-                    description="Hi, I'm Alec Thompson, Decisions: If you can't decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
+                    description={bio}
                     details={{
-                        "first name": "Alec M. Thompson",
-                        mobile: "(44) 123 1234 123",
-                        email: "alecthompson@mail.com",
-                        location: "USA",
+                        "first name": full_name,
+                        mobile: phone_number,
+                        email: email,
                         social: (
                             <div className="flex items-center gap-4">
                                 <i className="fa-brands fa-facebook text-blue-700" />
@@ -40,13 +43,13 @@ const Details = () => {
                         Friends
                     </Typography>
                     <ul className="flex flex-col gap-6">
-                        {conversationsData.map((props) => (
+                        {friends.map((props, index) => (
                             <MessageCard
-                                key={props.name}
+                                key={index}
                                 {...props}
                                 action={
-                                    <Button variant="text" size="sm">
-                                        reply
+                                    <Button variant="filled" size="sm">
+                                        Chat
                                     </Button>
                                 }
                             />
@@ -65,13 +68,13 @@ const Details = () => {
                     Personal Projects Completed
                 </Typography>
                 <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-4">
-                    {projectsData.map(
-                        ({ img, title, description, tag, route, members }) => (
+                    {courses.map(
+                        ({ img = '/img/home-decor-1.jpeg', title, description, type, _id, members }) => (
                             <Card key={title} color="transparent" shadow={false}>
                                 <CardHeader
                                     floated={false}
                                     color="gray"
-                                    className="mx-0 mt-0 mb-4 h-64 xl:h-40"
+                                    className="mx-0 mt-0 mb-4 h-64 xl:h-28"
                                 >
                                     <img
                                         src={img}
@@ -84,7 +87,7 @@ const Details = () => {
                                         variant="small"
                                         className="font-normal text-blue-gray-500"
                                     >
-                                        {tag}
+                                        {type}
                                     </Typography>
                                     <Typography
                                         variant="h5"
@@ -97,15 +100,13 @@ const Details = () => {
                                         variant="small"
                                         className="font-normal text-blue-gray-500"
                                     >
-                                        {description}
+                                        {truncateString(description, 100)}
                                     </Typography>
                                 </CardBody>
                                 <CardFooter className="mt-6 flex items-center justify-between py-0 px-1">
-                                    <Link to={route}>
-                                        <Button variant="outlined" size="sm">
-                                            view project
-                                        </Button>
-                                    </Link>
+                                    <Button onClick={() => {}} variant="outlined" size="sm">
+                                        View Course
+                                    </Button>
                                     <div>
                                         {members.map(({ img, name }, key) => (
                                             <Tooltip key={name} content={name}>
