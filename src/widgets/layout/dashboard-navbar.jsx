@@ -31,6 +31,7 @@ import { logoutUserRequest } from '../../store/reducers/auth-reducer'
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
+  // change this state to profile details state ASAP BRO
   const { userDetails } = useSelector(state => state.auth)
   const { fixedNavbar, openSidenav } = controller;
   const { pathname } = useLocation();
@@ -181,7 +182,7 @@ export function DashboardNavbar() {
             <MenuList className="w-max border-0">
               <MenuItem className="flex items-center gap-3">
                 <Avatar
-                  src="https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"
+                  src={userDetails?.user?.profile_picture ?? "https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"}
                   alt="item-1"
                   size="sm"
                   variant="circular"
