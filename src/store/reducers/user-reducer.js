@@ -27,7 +27,7 @@ export const updateProfileRequet = createAsyncThunk('UserReducer/updateProfileRe
 })
 
 export const searchUsersRequeast = createAsyncThunk('UserReducer/searchUsersRequeast', async (payload, thunkApi) => {
-  const response = await UserApiServices.updateProfile(payload, thunkApi)
+  const response = await UserApiServices.searchUsers(payload, thunkApi)
 
   return response
 })
