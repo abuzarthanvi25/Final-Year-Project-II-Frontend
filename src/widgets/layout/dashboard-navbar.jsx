@@ -28,16 +28,72 @@ import {
 } from "@/context";
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUserRequest } from '../../store/reducers/auth-reducer'
+import { InputAdornment, TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import CustomModal from '@/components/modals';
+import { useState } from 'react';
+import SearchUsers from '@/components/search-users';
+import { addFriendRequest, getProfileDetailsRequest, searchUsersRequeast } from '@/store/reducers/user-reducer';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { get } from 'lodash';
+import { showSuccessToast } from '@/utils/toast-helpers';
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
+  const textFieldStyles = {
+    '& label.Mui-focused': {
+      color: '#000',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#000',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: '#000',
+      },
+      '&:hover fieldset': {
+        borderColor: '#000',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#000',
+      },
+      },
+}
   // change this state to profile details state ASAP BRO
+  const { profileDetails } = useSelector(state => state.user)
   const { userDetails } = useSelector(state => state.auth)
   const { fixedNavbar, openSidenav } = controller;
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const dispatcher = useDispatch();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
+  const [open, setOpen] = useState(false);
+  const [searchedUsers, setSearchedUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const token = get(userDetails, "token", null);
+  const currentFriends = get(profileDetails, "friends", []);
+
+  const handleGetProfile = () => {
+    try {
+      if(token){
+        setLoading(true);
+
+        dispatcher(getProfileDetailsRequest({token}))
+        .then(unwrapResult)
+        .then(() => {
+          setLoading(false)
+        })
+        .catch(err => {
+          showFaliureToast(err?.response?.data?.message)
+          setLoading(false)
+        })
+
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleLogout = () => {
     dispatcher(logoutUserRequest())
@@ -45,6 +101,53 @@ export function DashboardNavbar() {
       navigate("/")
     })
     .catch(err => console.log(err))
+  }
+
+  const handleSearchUsers = (searchQuery = '') => {
+    try {
+      if(!token) return
+
+      setLoading(true)
+      dispatcher(searchUsersRequeast({searchQuery, token}))
+      .then(unwrapResult)
+      .then((res) => {
+        setLoading(false)
+        setSearchedUsers(res?.data?.data?.users)
+      })
+      .catch(err => {
+        setLoading(false);
+        showFaliureToast(err?.response?.data?.message)
+      })
+    } catch (error) {
+      console.log("error at handleSearchUsers",error)
+    }
+  }
+
+  const handleAddFriend = (friend_id) => {
+    try {
+      if(!token) return
+
+      setLoading(true)
+      dispatcher(addFriendRequest({friend_id, token}))
+      .then(unwrapResult)
+      .then((res) => {
+        setLoading(false);
+        handleGetProfile();
+        showSuccessToast(res?.data?.message)
+      })
+      .catch(err => {
+        setLoading(false);
+        showFaliureToast(err?.response?.data?.message)
+      })
+    } catch (error) {
+      console.log("error at handleSearchUsers",error)
+    }
+  }
+
+  const getIsAlreadyFriend = (id) => {
+    if(!id || currentFriends.length == 0) return false;
+
+    return currentFriends.some((friend) => friend?._id == id);
   }
 
   return (
@@ -59,6 +162,9 @@ export function DashboardNavbar() {
       blurred={fixedNavbar}
     >
       <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
+        <CustomModal open={open} onClose={() => setOpen(!open)} heading={'Search Users'}>
+          <SearchUsers isAlreadyFriend={getIsAlreadyFriend} handleAddFriend={handleAddFriend} loading={loading} handleSearch={handleSearchUsers} users={searchedUsers} />
+        </CustomModal>
         <div className="capitalize">
           <Breadcrumbs
             className={`bg-transparent p-0 transition-all ${
@@ -87,6 +193,17 @@ export function DashboardNavbar() {
           </Typography>
         </div>
         <div className="flex items-center">
+        <div className="mr-auto md:mr-4 md:w-56">
+            <TextField onClick={() => setOpen(true)} size='small' style={{cursor: 'pointer'}} 
+            InputProps={{
+            readOnly: true,
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            }} sx={textFieldStyles} placeholder='Search Users' />
+        </div>
           <IconButton
             variant="text"
             color="blue-gray"
@@ -182,7 +299,7 @@ export function DashboardNavbar() {
             <MenuList className="w-max border-0">
               <MenuItem className="flex items-center gap-3">
                 <Avatar
-                  src={userDetails?.user?.profile_picture ?? "https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"}
+                  src={profileDetails?.profile_picture ?? "https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"}
                   alt="item-1"
                   size="sm"
                   variant="circular"
@@ -193,7 +310,7 @@ export function DashboardNavbar() {
                     color="blue-gray"
                     className="mb-1 font-normal"
                   >
-                    <strong>{userDetails?.user?.full_name ?? 'John Doe'}</strong>
+                    <strong>{profileDetails?.full_name ?? 'John Doe'}</strong>
                   </Typography>
                   <Typography
                     variant="paragraph"

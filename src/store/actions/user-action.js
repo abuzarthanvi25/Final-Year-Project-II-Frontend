@@ -14,7 +14,8 @@ async function getProfile(payload, thunkAPI) {
 
 async function addFriend(payload, thunkAPI) {
   try {
-    const response = await ApiResource.get(ApiConstants.addFriend, payload?.body, requestHeaders(payload?.token))
+    const body = {friend_id: payload?.friend_id};
+    const response = await ApiResource.post(ApiConstants.addFriend, body, requestHeaders(payload?.token))
 
     return response
   } catch (error) {
@@ -25,6 +26,18 @@ async function addFriend(payload, thunkAPI) {
 async function getAllFriends(payload, thunkAPI) {
     try {
       const response = await ApiResource.get(ApiConstants.getAllFriends, payload?.body, requestHeaders(payload?.token))
+  
+      return response
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error)
+    }
+  }
+
+async function searchUsers(payload, thunkAPI) {
+    try {
+      const params = {searchQuery: payload?.searchQuery};
+      const queryString = new URLSearchParams(params).toString()
+      const response = await ApiResource.get(`${ApiConstants.searchUsers}?${queryString}`, requestHeaders(payload?.token))
   
       return response
     } catch (error) {
@@ -47,5 +60,6 @@ export const UserApiServices = {
     getProfile,
     addFriend,
     getAllFriends,
-    updateProfile
+    updateProfile,
+    searchUsers
 }

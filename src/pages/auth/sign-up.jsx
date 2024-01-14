@@ -41,6 +41,7 @@ export function SignUp() {
         .then(res => {
           showSuccessToast(res?.data?.message)
           setLoading(false)
+          navigate("/sign-in")
         })
         .catch(err => {
           showFaliureToast(err?.response?.data?.message)
