@@ -24,7 +24,7 @@ export function Profile() {
       component: <Details/>
     },
     {
-      label: "Settings",
+      label: "Edit Profile",
       value: "settings",
       icon: <Cog6ToothIcon className="-mt-1 mr-2 inline-block h-5 w-5" />,
       component: <></>

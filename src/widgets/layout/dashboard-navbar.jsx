@@ -26,16 +26,25 @@ import {
   setOpenConfigurator,
   setOpenSidenav,
 } from "@/context";
+import { useDispatch, useSelector } from 'react-redux'
+import { logoutUserRequest } from '../../store/reducers/auth-reducer'
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
+  // change this state to profile details state ASAP BRO
+  const { userDetails } = useSelector(state => state.auth)
   const { fixedNavbar, openSidenav } = controller;
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const dispatcher = useDispatch();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
 
   const handleLogout = () => {
-    navigate("/")
+    dispatcher(logoutUserRequest())
+    .then(() => {
+      navigate("/")
+    })
+    .catch(err => console.log(err))
   }
 
   return (
@@ -173,7 +182,7 @@ export function DashboardNavbar() {
             <MenuList className="w-max border-0">
               <MenuItem className="flex items-center gap-3">
                 <Avatar
-                  src="https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"
+                  src={userDetails?.user?.profile_picture ?? "https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"}
                   alt="item-1"
                   size="sm"
                   variant="circular"
@@ -184,7 +193,7 @@ export function DashboardNavbar() {
                     color="blue-gray"
                     className="mb-1 font-normal"
                   >
-                    <strong>Abuzar</strong>
+                    <strong>{userDetails?.user?.full_name ?? 'John Doe'}</strong>
                   </Typography>
                   <Typography
                     variant="paragraph"

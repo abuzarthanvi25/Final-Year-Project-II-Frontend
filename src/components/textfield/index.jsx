@@ -1,9 +1,14 @@
 import { Input, Typography } from "@material-tailwind/react";
-import { Fragment } from "react";
 
-export function Textfield({ helperText = '', error = false, ...rest }) {
+export function Textfield({ inputLabel = '', helperText = '', error = false, ...rest }) {
     return (
-        <Fragment >
+        <div>
+            {
+                !!inputLabel &&
+            <Typography variant="small" color="blue-gray" className="mb-3 font-medium">
+              {inputLabel}
+            </Typography>
+            }
             <Input className= {`!border-t-blue-gray-200 focus:!border-t-gray-900`}
                 labelProps={{
                     className: "before:content-none after:content-none",
@@ -13,7 +18,7 @@ export function Textfield({ helperText = '', error = false, ...rest }) {
                 <Typography
                     variant="small"
                     color="red"
-                    className="mt-2 flex items-center gap-1 font-normal"
+                    className="mt-1 flex items-center gap-1 font-normal"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -30,6 +35,6 @@ export function Textfield({ helperText = '', error = false, ...rest }) {
                     <span>{helperText}</span>
                 </Typography>
             }
-        </Fragment>
+        </div>
     );
 }
