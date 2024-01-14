@@ -1,11 +1,23 @@
 import * as Yup from 'yup'
 
-export const authInitialValues = {
+export const loginInitialValues = {
   email: '',
   password: ''
 }
 
-export const authValidationSchema = Yup.object({
+export const signupInitialValues = {
+  full_name: '',
+  email: '',
+  password: ''
+}
+
+export const loginValidationSchema = Yup.object({
+  email: Yup.string().email('Invalid email address').required('Required'),
+  password: Yup.string().required('Required')
+})
+
+export const signupValidationSchema = Yup.object({
+  full_name: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email address').required('Required'),
   password: Yup.string().required('Required')
 })

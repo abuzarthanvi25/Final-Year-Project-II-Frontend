@@ -9,6 +9,7 @@ import {
 } from "@/widgets/layout";
 import routes from "@/routes";
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
+import AuthRedirector from '@/components/auth-redirector';
 
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();

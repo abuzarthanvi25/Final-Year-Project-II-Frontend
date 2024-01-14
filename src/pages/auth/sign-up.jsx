@@ -1,21 +1,24 @@
-import { loginUserRequest } from '../../store/reducers/auth-reducer';
+import { loginUserRequest, registerUserRequest } from '../../store/reducers/auth-reducer';
 import {
   Checkbox,
   Button,
 } from "@material-tailwind/react";
-import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
+import { CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import { Link, useNavigate } from "react-router-dom";
 import { unwrapResult } from '@reduxjs/toolkit'
-import { authInitialValues, authValidationSchema } from '@/utils/validations/auth-validations';
+import { signupInitialValues, signupValidationSchema } from '@/utils/validations/auth-validations';
 import { showFaliureToast, showSuccessToast } from '@/utils/toast-helpers';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 
 export function SignUp() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false);
   const [iAgree, setIAgree] = useState(false);
   const [values, setValues] = useState({
@@ -33,11 +36,10 @@ export function SignUp() {
   const handleSignUp = (body) => {
     setLoading(true)
 
-      dispatch(loginUserRequest({ body }))
+      dispatch(registerUserRequest({ body }))
         .then(unwrapResult)
         .then(res => {
           showSuccessToast(res?.data?.message)
-          navigate('/dashboard/home')
           setLoading(false)
         })
         .catch(err => {
@@ -48,11 +50,10 @@ export function SignUp() {
 
 
   const formik = useFormik({
-    initialValues: authInitialValues,
-    validationSchema: authValidationSchema,
+    initialValues: signupInitialValues,
+    validationSchema: signupValidationSchema,
     onSubmit: values => {
-      // handleSignUp(values);
-      console.log(values);
+      handleSignUp(values);
     }
   })
 
@@ -71,6 +72,17 @@ export function SignUp() {
         </div>
         <form onSubmit={formik.handleSubmit} className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">
           <div className="mb-1 flex flex-col">
+          <TextField
+            fullWidth
+            id='full_name'
+            label='Full Name'
+            variant='outlined'
+            size='small' // Added to make the field smaller
+            sx={{ marginBottom: 4 }}
+            {...formik.getFieldProps('full_name')}
+            error={formik.touched.full_name && Boolean(formik.errors.full_name)}
+            helperText={formik.touched.full_name && formik.errors.full_name}
+        />
           <TextField
             fullWidth
             id='email'
@@ -137,7 +149,7 @@ export function SignUp() {
             containerProps={{ className: "-ml-2.5" }}
           />
           <Button disabled={loading || !iAgree} type='submit' className="mt-6" fullWidth>
-            Register Now
+            {loading ? <CircularProgress size={20} style={{color:'white'}} /> : "Register Now"}
           </Button>
 
           {/* <div className="space-y-4 mt-8">

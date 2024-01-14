@@ -3,19 +3,21 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
-import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
+import { CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import { unwrapResult } from '@reduxjs/toolkit'
-import { authInitialValues, authValidationSchema } from '@/utils/validations/auth-validations';
+import { loginInitialValues, loginValidationSchema } from '@/utils/validations/auth-validations';
 import { showFaliureToast, showSuccessToast } from '@/utils/toast-helpers';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
-import { registerUserRequest } from '@/store/reducers/auth-reducer';
+import { loginUserRequest, registerUserRequest } from '@/store/reducers/auth-reducer';
+import { useDispatch } from 'react-redux';
 
 
 export function SignIn() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
   const [iAgree, setIAgree] = useState(false);
@@ -31,10 +33,10 @@ export function SignIn() {
     event.preventDefault()
   }
 
-  const handleSignUp = (body) => {
+  const handleSignIn = (body) => {
     setLoading(true)
 
-      dispatch(registerUserRequest({ body }))
+      dispatch(loginUserRequest({ body }))
         .then(unwrapResult)
         .then(res => {
           showSuccessToast(res?.data?.message)
@@ -49,12 +51,10 @@ export function SignIn() {
 
 
   const formik = useFormik({
-    initialValues: authInitialValues,
-    validationSchema: authValidationSchema,
+    initialValues: loginInitialValues,
+    validationSchema: loginValidationSchema,
     onSubmit: values => {
-      // handleSignUp(values);
-      showSuccessToast('res?.data?.message')
-      console.log(values);
+      handleSignIn(values);
     }
   })
 
@@ -133,7 +133,7 @@ export function SignIn() {
             containerProps={{ className: "-ml-2.5" }}
           />
           <Button disabled={loading || !iAgree} type='submit' className="mt-6" fullWidth>
-            Sign In
+            {loading ? <CircularProgress size={20} style={{color: 'white'}} /> : "Sign In"}
           </Button>
 
           <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-4">

@@ -1,5 +1,5 @@
 const CONSTANT = {
-    login: '/login',
+    login: '/signin',
     signUp: '/signup',
   }
   

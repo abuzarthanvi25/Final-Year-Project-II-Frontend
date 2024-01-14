@@ -34,11 +34,6 @@ const Details = () => {
                             </div>
                         ),
                     }}
-                    action={
-                        <Tooltip content="Edit Profile">
-                            <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />
-                        </Tooltip>
-                    }
                 />
                 <div>
                     <Typography variant="h6" color="blue-gray" className="mb-3">

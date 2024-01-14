@@ -38,7 +38,7 @@ const authReducer = createReducer(initialState, builder => {
     .addCase(loginUserRequest.fulfilled, (state, action) => {
       state.error = null
       state.loading = loadingStates.idle
-      state.userDetails = { ...action.payload.data }
+      state.userDetails = { ...action.payload.data?.data }
     })
     .addCase(loginUserRequest.rejected, (state, action) => {
       state.error = action.payload?.response?.data

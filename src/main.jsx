@@ -7,16 +7,25 @@ import { MaterialTailwindControllerProvider } from "@/context";
 import "../public/css/tailwind.css";
 import OfflineNotifier from "./widgets/custom-widgets/offline-notifier";
 import Toast from './components/toasts';
+import { Provider } from 'react-redux';
+import configureStores from '../src/store/index';
+import AuthRedirector from './components/auth-redirector';
+
+const { store } = configureStores();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <OfflineNotifier/>
-        <Toast/>
-        <MaterialTailwindControllerProvider>
-          <App />
-        </MaterialTailwindControllerProvider>
+        <Provider store={store}>
+          <OfflineNotifier/>
+          <Toast/>
+          <MaterialTailwindControllerProvider>
+            <AuthRedirector>
+            <App />
+            </AuthRedirector>
+          </MaterialTailwindControllerProvider>
+        </Provider>
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>
