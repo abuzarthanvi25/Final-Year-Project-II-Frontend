@@ -18,7 +18,6 @@ const UserAvatar = ({ src, name = '', className, ...rest }) => {
       sizes='large'
       src={hasProfileImage ? src : 'undefined'}
       alt={name}
-      variant="rounded"
       className={`shadow-lg shadow-blue-gray-500/25 ${className}`}
     >
       {!hasProfileImage && getInitials(name)}
