@@ -1,3 +1,4 @@
+import Editor from '@/components/editor';
 import { Typography } from '@material-tailwind/react';
 import { get } from 'lodash';
 import React from 'react'

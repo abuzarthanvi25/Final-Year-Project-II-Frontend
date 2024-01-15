@@ -1,6 +1,6 @@
 import CourseCard from "@/components/course/course-card/course-card";
 import { getAllCoursesRequest } from "@/store/reducers/course-reducer";
-import { Typography } from "@material-tailwind/react";
+import { Button, Typography } from "@material-tailwind/react";
 import { Grid } from "@mui/material";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { get } from "lodash";
@@ -57,6 +57,9 @@ export function Courses() {
 
     return (
         <div>
+            <div className="w-full">
+                <Button className="ms-10">Add Courses</Button>
+            </div>
             <div className="w-full">
                 <Typography className="text-center text-xl font-light text-gray-900">All Courses</Typography>
             </div>
