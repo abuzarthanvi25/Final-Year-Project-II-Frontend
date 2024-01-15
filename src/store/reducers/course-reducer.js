@@ -20,6 +20,12 @@ export const getAllCoursesRequest = createAsyncThunk('CourseReducer/getAllCourse
   return response
 })
 
+export const addCourseRequest = createAsyncThunk('CourseReducer/addCourseRequest', async (payload, thunkApi) => {
+  const response = await CourseApiServices.createCourse(payload, thunkApi)
+
+  return response
+})
+
 const CourseReducer = createReducer(initialState, builder => {
   builder
 
