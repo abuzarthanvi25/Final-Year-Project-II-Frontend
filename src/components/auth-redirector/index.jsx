@@ -26,7 +26,7 @@ const AuthRedirector = ({ children, auth, rehydrated }) => {
 
     if (!auth?.userDetails) {
       // logged out cases
-      if(!location.pathname === '/' || location.pathname.includes("/dashboard")){
+      if(location.pathname == '/' || location.pathname.includes("/dashboard")){
         setIsLoading(false)
         navigate('/')
       }

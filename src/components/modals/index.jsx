@@ -3,7 +3,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import { Typography } from '@mui/material'
 
-const CustomModal = ({ open = () => {}, onClose = () => {}, heading, children }) => {
+const CustomModal = ({ open = () => {}, onClose = () => {}, children }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <Card

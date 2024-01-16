@@ -59,13 +59,7 @@ const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, 
             </div>
             <div className="px-4 pb-4">
                 <Typography variant="h6" color="blue-gray" className="mb-2">
-                    Personal Projects
-                </Typography>
-                <Typography
-                    variant="small"
-                    className="font-normal text-blue-gray-500"
-                >
-                    Personal Projects Completed
+                    Personal Courses
                 </Typography>
                 <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-4">
                     {courses.map(
@@ -96,16 +90,20 @@ const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, 
                                     >
                                         {title}
                                     </Typography>
+                                    <Tooltip placement="top" content={<div className='w-80'>
+                                        <Typography className='text-white font-medium text-xs'>{description}</Typography>
+                                    </div>}>
                                     <Typography
                                         variant="small"
                                         className="font-normal text-blue-gray-500"
                                     >
-                                        {truncateString(description, 100)}
+                                        {truncateString(description, 80)}
                                     </Typography>
+                                    </Tooltip>
                                 </CardBody>
                                 <CardFooter className="mt-6 flex items-center justify-between py-0 px-1">
-                                    <Button onClick={() => {}} variant="outlined" size="sm">
-                                        View Course
+                                    <Button onClick={() => {navigate(`/dashboard/courses/${_id}`)}} variant="filled" size="sm">
+                                        View Notes
                                     </Button>
                                     <div>
                                         {members.map(({ img, name }, key) => (

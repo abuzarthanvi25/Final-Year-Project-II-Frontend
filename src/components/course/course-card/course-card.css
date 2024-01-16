@@ -1,0 +1,13 @@
+* ::before ::after{
+    box-sizing: border-box;
+}
+
+.image-wrapper{
+    padding: 15px;
+    background-image: url('/img/banner2.png');
+    background-size: cover;
+}
+
+.item :hover{
+    cursor: pointer;
+}

@@ -9,6 +9,7 @@ import {
 } from "@/widgets/layout";
 import routes from "@/routes";
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
+import Notes from "@/pages/dashboard/courses/id";
 
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -42,6 +43,8 @@ export function Dashboard() {
                 <Route exact path={path} element={element} />
               ))
           )}
+
+          <Route exact path={'/courses/:id'} element={<Notes/>} />
         </Routes>
         {/* <div className="text-blue-gray-600">
           <Footer />
