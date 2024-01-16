@@ -1,6 +1,7 @@
-import { Avatar, Button, Card, Tooltip, Typography } from "@material-tailwind/react"
+import { Avatar, Button, Card, CardHeader, IconButton, Menu, MenuHandler, MenuItem, MenuList, Tooltip, Typography } from "@material-tailwind/react"
 import "./course-card.css"
 import { truncateString } from '@/utils/helpers'
+import { EllipsisVerticalIcon, TrashIcon, PencilSquareIcon } from '@heroicons/react/24/solid'
 
 const CourseCard = ({title = 'Lorem ipsum dolor .', type = 'Lorem ipsum',description = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem iure consequatur aperiam fugiat ipsam! Voluptatum illo accusamus inventore esse aut.' , members = [
   { img: "", full_name: "Romina Hadid" },
@@ -11,9 +12,49 @@ const CourseCard = ({title = 'Lorem ipsum dolor .', type = 'Lorem ipsum',descrip
 ], handleViewNotes = () => {}}) => {
   return (
     <Card className="image-wrapper shadow-2xl">
+      <div className='flex justify-between'>
       <Tooltip placement="top-start" content={title}>
         <Typography className="text-4xl font-bold text-gray-800 mt-2">{truncateString(title, 12)}</Typography>
       </Tooltip>
+      <CardHeader
+            floated={false}
+            shadow={false}
+            color="transparent"
+            className="m-0 flex items-center justify-end"
+          >
+            <Menu placement="right-start">
+              <MenuHandler>
+                <IconButton size="sm" variant="text" color="blue-gray">
+                  <EllipsisVerticalIcon
+                    strokeWidth={3}
+                    fill="currenColor"
+                    className="h-6 w-6"
+                  />
+                </IconButton>
+              </MenuHandler>
+              <MenuList className='min-w-fit m-0'>
+                <MenuItem className='m-0'>
+                  <div className='flex justify-evenly items-center'>
+                  <PencilSquareIcon
+                    strokeWidth={3}
+                    fill="currenColor"
+                    className="h-5"
+                  />
+                  </div>
+                </MenuItem>
+                <MenuItem>
+                <div className='flex justify-evenly items-center'>
+                  <TrashIcon
+                    strokeWidth={3}
+                    fill="red"
+                    className="h-5"
+                  />
+                  </div>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </CardHeader>
+      </div>
       <Typography className="text-xs text-gray-800 mb-1">{type}</Typography>
       <Tooltip style={{maxWidth: '20px'}} placement="top-end" content={<div className='w-80'>
         <Typography className='text-white font-medium text-xs'>{description}</Typography>
