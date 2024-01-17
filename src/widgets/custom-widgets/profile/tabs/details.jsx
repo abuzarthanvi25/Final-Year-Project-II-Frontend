@@ -38,7 +38,7 @@ const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, 
                         ),
                     }}
                 />
-                <div>
+                {!!friends.length && <div>
                     <Typography variant="h6" color="blue-gray" className="mb-3">
                         Friends
                     </Typography>
@@ -55,7 +55,7 @@ const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, 
                             />
                         ))}
                     </ul>
-                </div>
+                </div>}
             </div>
             <div className="px-4 pb-4">
                 <Typography variant="h6" color="blue-gray" className="mb-2">
