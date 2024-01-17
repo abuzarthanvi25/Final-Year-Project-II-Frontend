@@ -63,8 +63,8 @@ const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, 
                 </Typography>
                 <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-4">
                     {courses.map(
-                        ({ img = '/img/home-decor-1.jpeg', title, description, type, _id, members }) => (
-                            <Card key={title} color="transparent" shadow={false}>
+                        ({ img = '/img/home-decor-1.jpeg', title, description, type, _id, members }, index) => (
+                            <Card key={index} color="transparent" shadow={false}>
                                 <CardHeader
                                     floated={false}
                                     color="gray"
