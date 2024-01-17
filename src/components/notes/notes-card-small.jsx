@@ -3,11 +3,13 @@ import { EllipsisVerticalIcon, ListBulletIcon, TrashIcon, UserCircleIcon, Docume
 import { truncateString } from '@/utils/helpers'
 import "./notes-card-small.css"
 
-const NotesCardSmall = ({ profile_picture = '', full_name = '', title = 'Shit Note Shit Note Shita Note Shita Note Shita', updatedAt = '12-10-2024', handleDelete = () => { }, handleClickNote = () => { } }) => {
+const NotesCardSmall = ({ profile_picture = '', full_name = '', title = 'Shit Note Shit Note Shita Note Shita Note Shita', updatedAt = '12-10-2024', handleDelete = () => { }, handleClickNote = () => { }, loading = false }) => {
     return (
-        <div className='cursor-pointer w-fit note-body' onClick={handleClickNote}>
-            <div style={{ height: '200px', width: '200px', backgroundColor: '#fff', border: '0.5px solid #DADADA', borderTopRightRadius: '3px', borderTopLeftRadius: '3px' }}>
-
+        <div style={{ pointerEvents: loading ? 'none' : 'all' }} className='w-fit note-body'>
+            <div onClick={handleClickNote} style={{ height: '200px', width: '200px', backgroundColor: '#fff', border: '0.5px solid #DADADA', borderTopRightRadius: '3px', borderTopLeftRadius: '3px', cursor: 'pointer' }}>
+                {
+                    !!loading && <div className='w-full h-full flex justify-center items-center'><Typography>Loading...</Typography></div>
+                }
             </div>
             <div className='px-2 py-1 m-0' style={{ width: '200px', backgroundColor: '#fff', borderBottom: '0.5px solid #DADADA', borderRight: '0.5px solid #DADADA', borderLeft: '0.5px solid #DADADA', borderBottomLeftRadius: '3px', borderBottomRightRadius: '3px' }}>
                 <Tooltip style={{ maxWidth: '16px' }} placement="top" content={<span className='text-xs w-80'>{title}</span>}>

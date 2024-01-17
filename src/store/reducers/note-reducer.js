@@ -20,8 +20,26 @@ export const getAllNotesRequest = createAsyncThunk('NoteReducer/getAllNotesReque
   return response
 })
 
+export const getNoteDetailsRequest = createAsyncThunk('NoteReducer/getNoteDetailsRequest', async (payload, thunkApi) => {
+  const response = await NoteApiServices.getNoteDetails(payload, thunkApi)
+
+  return response
+})
+
 export const createNoteRequest = createAsyncThunk('NoteReducer/createNoteRequest', async (payload, thunkApi) => {
   const response = await NoteApiServices.createNote(payload, thunkApi)
+
+  return response
+})
+
+export const updateNoteRequest = createAsyncThunk('NoteReducer/updateNoteRequest', async (payload, thunkApi) => {
+  const response = await NoteApiServices.updateNote(payload, thunkApi)
+
+  return response
+})
+
+export const deleteNoteRequest = createAsyncThunk('NoteReducer/deleteNoteRequest', async (payload, thunkApi) => {
+  const response = await NoteApiServices.deleteNote(payload, thunkApi)
 
   return response
 })

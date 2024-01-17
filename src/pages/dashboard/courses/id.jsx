@@ -1,6 +1,6 @@
 import AddNoteCard from '@/components/notes/notes-add-small';
 import NotesCardSmall from '@/components/notes/notes-card-small';
-import { getAllNotesRequest } from '@/store/reducers/note-reducer';
+import { deleteNoteRequest, getAllNotesRequest } from '@/store/reducers/note-reducer';
 import { formatDate } from '@/utils/helpers';
 import { showFaliureToast } from '@/utils/toast-helpers';
 import { Typography } from '@material-tailwind/react';
@@ -9,12 +9,13 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Divider from '@mui/material/Divider';
 
 const CourseDetails = () => {
   const params = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { userDetails } = useSelector((state) => state.auth);
   const { profileDetails } = useSelector((state) => state.user)
@@ -26,10 +27,11 @@ const CourseDetails = () => {
 
   const [loading, setLoading] = useState(false);
   const [notesLocal, setNotesLocal] = useState([]);
+  const course_id = get(params, 'id', null); //NOTE - Fetch notes by course id
 
   const handleGetNotes = () => {
     try {
-      const course_id = get(params, 'id', null); //NOTE - Fetch notes by course id
+      if (!token || !course_id) return;
 
       dispatch(getAllNotesRequest({ token, course_id }))
         .then(unwrapResult)
@@ -41,7 +43,27 @@ const CourseDetails = () => {
           setLoading(false)
         })
 
-      if (!token || !course_id) return;
+    } catch (error) {
+      console.log(error);
+    }
+
+
+  }
+
+  const handleDeleteNote = (note_id) => {
+    try {
+      if (!token || !note_id) return;
+      dispatch(deleteNoteRequest({ token, note_id }))
+        .then(unwrapResult)
+        .then(() => {
+          handleGetNotes()
+          setLoading(false)
+        })
+        .catch((err) => {
+          showFaliureToast(err?.response?.data?.message)
+          setLoading(false)
+        })
+
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +86,7 @@ const CourseDetails = () => {
           <Grid item md={2}>
             <div>
               <Typography className='text-md text-left'>Create a note</Typography>
-              <AddNoteCard handleAddNote={()=> console.log('ccc')} />
+              <AddNoteCard handleAddNote={()=> navigate('/dashboard/notes/create-note', {state: {course_id, token}})} />
             </div>
           </Grid>
           <Grid item md={2}>
@@ -84,13 +106,13 @@ const CourseDetails = () => {
             <Typography className='text-left text-md mt-2'>Recent Notes</Typography>
           </Grid>
           {
-            !loading && notesLocal?.length ? notesLocal.map(({ title, updated_at }, index) => (
+            !loading && notesLocal?.length ? notesLocal.map(({ title, updated_at, _id, data }, index) => (
               <Grid key={index} item md={3}>
-                <NotesCardSmall profile_picture={profile_picture} full_name={full_name} title={title} updatedAt={formatDate(updated_at)} />
+                <NotesCardSmall loading={loading} handleDelete={() => handleDeleteNote(_id)} handleClickNote={() => navigate(`/dashboard/notes/edit/${_id}`, {state: {title, updated_at, token, data, course_id}})} profile_picture={profile_picture} full_name={full_name} title={title} updatedAt={formatDate(updated_at)} />
               </Grid>
             ))
 
-              : <p>No Notes</p>
+              : <div className='w-full h-full'><p className='text-center'>No Notes</p></div>
           }
         </Grid>
       </div>
