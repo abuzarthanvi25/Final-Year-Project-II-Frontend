@@ -42,7 +42,7 @@ const Note = ({ handleSave, loading, previousData }) => {
         }}>
           <div className='flex items-center'>
             <Typography className='text-2xl me-3'>Title:</Typography>
-            <Input placeholder='Untitled' style={{padding: 0, textAlign:'center'}} onChange={(e) => setTitle(e.target.value)} required defaultValue={title} variant='outlined' />
+            <Input placeholder='Untitled' style={{padding: 0, textAlign:'left', minWidth:'40ch', paddingLeft:'10px'}} onChange={(e) => setTitle(e.target.value)} required defaultValue={title} variant='outlined' />
           </div>
           <Button style={{ minWidth: '120px' }} disabled={loading} type='submit'>
             {

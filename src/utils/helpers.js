@@ -32,3 +32,19 @@ export function formatDate(inputDate) {
 
   return formattedDate;
 }
+
+export function formatDateNew(inputDateString) {
+  const options = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+
+  const date = new Date(inputDateString);
+  const formattedDate = date.toLocaleDateString('en-US', options);
+
+  return `${formattedDate}`;
+}

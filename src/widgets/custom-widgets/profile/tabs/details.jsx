@@ -107,7 +107,7 @@ const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, 
                                     </Button>
                                     <div>
                                         {members.map(({ img, name }, key) => (
-                                            <Tooltip key={name} content={name}>
+                                            <Tooltip key={key} content={name}>
                                                 <Avatar
                                                     src={img}
                                                     alt={name}

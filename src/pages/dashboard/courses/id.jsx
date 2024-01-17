@@ -1,7 +1,7 @@
 import AddNoteCard from '@/components/notes/notes-add-small';
 import NotesCardSmall from '@/components/notes/notes-card-small';
 import { deleteNoteRequest, getAllNotesRequest } from '@/store/reducers/note-reducer';
-import { formatDate } from '@/utils/helpers';
+import { formatDate, formatDateNew } from '@/utils/helpers';
 import { showFaliureToast } from '@/utils/toast-helpers';
 import { Typography } from '@material-tailwind/react';
 import { Grid } from '@mui/material';
@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
 import Divider from '@mui/material/Divider';
+import NotesCardSmallSkeleton from '@/components/notes/skeleton-notes-card-small';
 
 const CourseDetails = () => {
   const params = useParams();
@@ -106,12 +107,14 @@ const CourseDetails = () => {
             <Typography className='text-left text-md mt-2'>Recent Notes</Typography>
           </Grid>
           {
-            !loading && notesLocal?.length ? notesLocal.map(({ title, updated_at, _id, data }, index) => (
+            loading ? [1,2,3,4].map((_) => (
+              <Grid key={_} item md={3}><NotesCardSmallSkeleton/></Grid>
+            )) :
+             notesLocal?.length ? notesLocal.map(({ title, updated_at, _id, data }, index) => (
               <Grid key={index} item md={3}>
-                <NotesCardSmall loading={loading} handleDelete={() => handleDeleteNote(_id)} handleClickNote={() => navigate(`/dashboard/notes/edit/${_id}`, {state: {title, updated_at, token, data, course_id}})} profile_picture={profile_picture} full_name={full_name} title={title} updatedAt={formatDate(updated_at)} />
+                <NotesCardSmall loading={loading} handleDelete={() => handleDeleteNote(_id)} handleClickNote={() => navigate(`/dashboard/notes/edit/${_id}`, {state: {title, updated_at, token, data, course_id}})} profile_picture={profile_picture} full_name={full_name} title={title} updatedAt={formatDateNew(updated_at)} />
               </Grid>
             ))
-
               : <div className='w-full h-full'><p className='text-center'>No Notes Found</p></div>
           }
         </Grid>

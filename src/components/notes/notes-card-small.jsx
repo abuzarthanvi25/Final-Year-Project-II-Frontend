@@ -6,14 +6,14 @@ import "./notes-card-small.css"
 const NotesCardSmall = ({ profile_picture = '', full_name = '', title = 'Shit Note Shit Note Shita Note Shita Note Shita', updatedAt = '12-10-2024', handleDelete = () => { }, handleClickNote = () => { }, loading = false }) => {
     return (
         <div style={{ pointerEvents: loading ? 'none' : 'all' }} className='w-fit note-body'>
-            <div onClick={handleClickNote} style={{ height: '200px', width: '200px', backgroundColor: '#fff', border: '0.5px solid #DADADA', borderTopRightRadius: '3px', borderTopLeftRadius: '3px', cursor: 'pointer' }}>
+            <div onClick={handleClickNote} style={{ height: '240px', width: '220px', backgroundColor: '#fff', border: '0.5px solid #DADADA', borderTopRightRadius: '3px', borderTopLeftRadius: '3px', cursor: 'pointer' }}>
                 {
                     !!loading && <div className='w-full h-full flex justify-center items-center'><Typography>Loading...</Typography></div>
                 }
             </div>
-            <div className='px-2 py-1 m-0' style={{ width: '200px', backgroundColor: '#fff', borderBottom: '0.5px solid #DADADA', borderRight: '0.5px solid #DADADA', borderLeft: '0.5px solid #DADADA', borderBottomLeftRadius: '3px', borderBottomRightRadius: '3px' }}>
+            <div className='px-2 py-1 m-0' style={{ width: '220px', backgroundColor: '#fff', borderBottom: '0.5px solid #DADADA', borderRight: '0.5px solid #DADADA', borderLeft: '0.5px solid #DADADA', borderBottomLeftRadius: '3px', borderBottomRightRadius: '3px' }}>
                 <Tooltip style={{ maxWidth: '16px' }} placement="top" content={<span className='text-xs w-80'>{title}</span>}>
-                    <Typography style={{ fontSize: '13px', fontWeight: '500' }}>{truncateString(title, 28)}</Typography>
+                    <Typography style={{ fontSize: '13px', fontWeight: '500' }}>{truncateString(title, 26)}</Typography>
                 </Tooltip>
                 <div className='flex items-center justify-between'>
                     <div className='flex justify-evenly'>
@@ -34,7 +34,7 @@ const NotesCardSmall = ({ profile_picture = '', full_name = '', title = 'Shit No
                         />
                     </div>
                     <div className='flex items-center'>
-                        <Typography style={{ fontSize: '12px' }} className='me-1 text-gray-700'>{updatedAt}</Typography>
+                        <Typography style={{ fontSize: '10.5px' }} className='me-1 text-gray-700'>{updatedAt}</Typography>
                         <Menu placement="right-start">
                             <MenuHandler>
                                 <IconButton style={{ borderRadius: '50%' }} size="sm" variant="text" color="blue-gray">
