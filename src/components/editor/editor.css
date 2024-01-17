@@ -6,11 +6,11 @@
     background-color: #F3F3F3;
     margin: 0;
   }
-  
+
   .container .ql-editor {
     width: 8.5in;
-    min-height: 11in;
-    padding: 1in;
+    min-height: 10in;
+    padding: 0.5in;
     margin: 1rem;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, .5);
     background-color: white;
@@ -28,7 +28,7 @@
     position: sticky;
     top: 0;
     z-index: 1;
-    background-color: #F3F3F3;
+    background-color: #fff;
     border: none;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, .5);
   }

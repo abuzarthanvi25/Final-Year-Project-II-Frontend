@@ -8,7 +8,14 @@ const CONSTANT = {
     searchUsers: '/search-users',
     createCourse: '/create-course',
     getAllCourses: '/get-all-courses',
-    updateCourse: '/update-course'
+    updateCourse: '/update-course',
+    deleteCourse: '/delete-course',
+    createNote: '/create-note',
+    getNotes: '/get-notes',
+    getNote: '/get-note',
+    deleteNote: '/delete-note',
+    updateNote: '/update-note',
+    getNoteDetails: '/get-note'
   }
   
   export default CONSTANT

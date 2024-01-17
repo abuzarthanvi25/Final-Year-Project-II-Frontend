@@ -38,7 +38,7 @@ const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, 
                         ),
                     }}
                 />
-                <div>
+                {!!friends.length && <div>
                     <Typography variant="h6" color="blue-gray" className="mb-3">
                         Friends
                     </Typography>
@@ -55,7 +55,7 @@ const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, 
                             />
                         ))}
                     </ul>
-                </div>
+                </div>}
             </div>
             <div className="px-4 pb-4">
                 <Typography variant="h6" color="blue-gray" className="mb-2">
@@ -63,8 +63,8 @@ const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, 
                 </Typography>
                 <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-4">
                     {courses.map(
-                        ({ img = '/img/home-decor-1.jpeg', title, description, type, _id, members }) => (
-                            <Card key={title} color="transparent" shadow={false}>
+                        ({ img = '/img/home-decor-1.jpeg', title, description, type, _id, members }, index) => (
+                            <Card key={index} color="transparent" shadow={false}>
                                 <CardHeader
                                     floated={false}
                                     color="gray"
@@ -107,7 +107,7 @@ const Details = ({bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, 
                                     </Button>
                                     <div>
                                         {members.map(({ img, name }, key) => (
-                                            <Tooltip key={name} content={name}>
+                                            <Tooltip key={key} content={name}>
                                                 <Avatar
                                                     src={img}
                                                     alt={name}

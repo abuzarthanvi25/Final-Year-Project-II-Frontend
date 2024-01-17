@@ -22,9 +22,12 @@ import { getProfileDetailsRequest } from '@/store/reducers/user-reducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { showFaliureToast } from '@/utils/toast-helpers';
 import { Skeleton } from '@mui/material';
+import { logoutUserRequest } from '@/store/reducers/auth-reducer';
+import { useNavigate } from 'react-router-dom';
 
 export function Profile() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [profileDetailsLocal, setProfileDetailsLocal] = useState(null)
@@ -52,6 +55,14 @@ export function Profile() {
     }
   }, [profileDetails])
 
+  const handleLogout = () => {
+    try {
+      dispatch(logoutUserRequest()).then(() => navigate("/sign-in"));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const handleGetProfile = () => {
     try {
       if(token){
@@ -64,6 +75,9 @@ export function Profile() {
         })
         .catch(err => {
           showFaliureToast(err?.response?.data?.message)
+          if(err?.response?.data?.message === 'User not found'){
+            handleLogout();
+          }
           setLoading(false)
         })
 

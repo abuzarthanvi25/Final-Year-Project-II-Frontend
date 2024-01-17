@@ -26,6 +26,18 @@ export const addCourseRequest = createAsyncThunk('CourseReducer/addCourseRequest
   return response
 })
 
+export const updateCourseRequest = createAsyncThunk('CourseReducer/updateCourseRequest', async (payload, thunkApi) => {
+  const response = await CourseApiServices.updateCourse(payload, thunkApi)
+
+  return response
+})
+
+export const deleteCourseRequest = createAsyncThunk('CourseReducer/deleteCourseRequest', async (payload, thunkApi) => {
+  const response = await CourseApiServices.deleteCourse(payload, thunkApi)
+
+  return response
+})
+
 const CourseReducer = createReducer(initialState, builder => {
   builder
 
