@@ -1,16 +1,18 @@
-import { Button } from '@material-tailwind/react';
+import { Button, Input, Typography } from '@material-tailwind/react';
 import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import "../editor/editor.css"
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, TextField } from '@mui/material';
 
 const Note = ({ handleSave, loading, previousData }) => {
   const [value, setValue] = useState('');
+  const [title, setTitle] = useState('')
 
   useEffect(() => {
     if (previousData) {
       setValue(JSON.parse(previousData?.data))
+      setTitle(previousData?.title)
     }
   }, [previousData])
 
@@ -33,13 +35,22 @@ const Note = ({ handleSave, loading, previousData }) => {
 
   return (
     <div style={{ pointerEvents: loading ? 'none' : 'all' }} className='container'>
-      <div className='my-2'>
-        <Button style={{minWidth:'120px'}} disabled={loading} onClick={() => handleSave({ data: value, title: previousData?.title })}>
-          {
-            loading ? <CircularProgress size={20} style={{ color: 'white' }} /> :
-              'Save Changes'
-          }
-        </Button>
+      <div >
+        <form className='my-2 flex justify-between' onSubmit={(e) => {
+          e.preventDefault();
+          handleSave({ data: value, title: title })
+        }}>
+          <div className='flex items-center'>
+            <Typography className='text-2xl me-3'>Title:</Typography>
+            <Input placeholder='Untitled' style={{padding: 0, textAlign:'center'}} onChange={(e) => setTitle(e.target.value)} required defaultValue={title} variant='outlined' />
+          </div>
+          <Button style={{ minWidth: '120px' }} disabled={loading} type='submit'>
+            {
+              loading ? <CircularProgress size={20} style={{ color: 'white' }} /> :
+                'Save Changes'
+            }
+          </Button>
+        </form>
       </div>
       <ReactQuill modules={modules} theme="snow" value={value} onChange={setValue} />
     </div>

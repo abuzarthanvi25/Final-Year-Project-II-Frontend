@@ -19,7 +19,7 @@ const CreateNote = () => {
 
     const handleAddNote = (notesContent) => {
         const body = {
-            title:'Linear Transformations',
+            title: notesContent?.title,
             data: JSON.stringify(notesContent?.data),
             course_id
         }
