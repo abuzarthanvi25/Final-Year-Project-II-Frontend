@@ -1,0 +1,8 @@
+.note-body:hover{
+    border: 0.5px solid #89ABD0 !important;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.note-body{
+    transition: 0.3s;
+}
