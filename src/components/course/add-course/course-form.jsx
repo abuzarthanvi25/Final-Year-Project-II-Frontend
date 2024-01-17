@@ -2,9 +2,9 @@ import { addCourseInitialValues, addCourseValidationSchema } from '@/utils/valid
 import { Button, Typography } from '@material-tailwind/react';
 import { CircularProgress, TextField } from '@mui/material'
 import { useFormik } from 'formik';
-import React from 'react'
+import React, { useEffect } from 'react'
 
-const AddCourse = ({loading = false, handleAddCourse = () => {}}) => {
+const AddCourse = ({loading = false, handleAddCourse = () => {}, previousData = null}) => {
 
     const formik = useFormik({
         initialValues: addCourseInitialValues,
@@ -13,6 +13,13 @@ const AddCourse = ({loading = false, handleAddCourse = () => {}}) => {
          handleAddCourse({...values, type: 'Personal'});
         }
       })
+
+      useEffect(() => {
+        if(previousData){
+          formik.setFieldValue('title', previousData?.title);
+          formik.setFieldValue('description', previousData?.description);
+        }
+      }, [])
 
   return (
     <section className='w-full p-3'>
@@ -40,8 +47,9 @@ const AddCourse = ({loading = false, handleAddCourse = () => {}}) => {
             label='Description'
             multiline
             variant='outlined'
-            minRows={5}
-            maxRows={12}
+            rows={5}
+            // minRows={5} //NOTE - REMOVED MIN AND MAX ROWS FOR RE-RENDER BUG WTF
+            // maxRows={12}
             size='small' // Added to make the field smaller
             sx={{ marginBottom: 4 }}
             {...formik.getFieldProps('description')}
@@ -50,7 +58,7 @@ const AddCourse = ({loading = false, handleAddCourse = () => {}}) => {
         />
           </div>
           <Button disabled={loading} type='submit' className="mt-1" fullWidth>
-            {loading ? <CircularProgress size={16} style={{color: 'white'}} /> : "Add Course"}
+            {loading ? <CircularProgress size={16} style={{color: 'white'}} /> : previousData ? "Edit Course" : "Add Course"}
           </Button>
         </form>
       </div>

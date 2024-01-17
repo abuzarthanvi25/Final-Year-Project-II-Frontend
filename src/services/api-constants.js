@@ -9,6 +9,7 @@ const CONSTANT = {
     createCourse: '/create-course',
     getAllCourses: '/get-all-courses',
     updateCourse: '/update-course',
+    deleteCourse: '/delete-course',
     createNote: '/create-note',
     getNotes: '/get-notes',
     getNote: '/get-note',

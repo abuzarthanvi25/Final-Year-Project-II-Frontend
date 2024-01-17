@@ -9,7 +9,7 @@ const CourseCard = ({title = 'Lorem ipsum dolor .', type = 'Lorem ipsum',descrip
   { img: "/img/team-3.jpeg", full_name: "Jessica Doe" },
   { img: "/img/team-4.jpeg", full_name: "Alexander Smith" },
   { img: "/img/team-4.jpeg", full_name: "Alexander Smith" },
-], handleViewNotes = () => {}}) => {
+], handleViewNotes = () => {}, handleDeleteCourse = () => {}, handleEditAction = () => {}}) => {
   return (
     <Card className="image-wrapper shadow-2xl">
       <div className='flex justify-between'>
@@ -33,7 +33,7 @@ const CourseCard = ({title = 'Lorem ipsum dolor .', type = 'Lorem ipsum',descrip
                 </IconButton>
               </MenuHandler>
               <MenuList className='min-w-fit m-0'>
-                <MenuItem className='m-0'>
+                <MenuItem onClick={handleEditAction} className='m-0'>
                   <div className='flex justify-evenly items-center'>
                   <PencilSquareIcon
                     strokeWidth={3}
@@ -42,7 +42,7 @@ const CourseCard = ({title = 'Lorem ipsum dolor .', type = 'Lorem ipsum',descrip
                   />
                   </div>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem onClick={handleDeleteCourse}>
                 <div className='flex justify-evenly items-center'>
                   <TrashIcon
                     strokeWidth={3}
