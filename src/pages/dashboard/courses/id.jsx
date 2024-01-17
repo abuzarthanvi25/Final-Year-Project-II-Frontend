@@ -112,7 +112,7 @@ const CourseDetails = () => {
               </Grid>
             ))
 
-              : <div className='w-full h-full'><p className='text-center'>No Notes</p></div>
+              : <div className='w-full h-full'><p className='text-center'>No Notes Found</p></div>
           }
         </Grid>
       </div>
