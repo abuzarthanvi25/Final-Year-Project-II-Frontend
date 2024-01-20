@@ -54,11 +54,22 @@ async function updateNote(payload, thunkAPI) {
     }
 }
 
+async function summarizeNote(payload, thunkAPI) {
+    try {
+        if (!payload?.note_id) return;
+        const response = await ApiResource.post(`${ApiConstants.summarizeNote}/${payload?.note_id}`, payload?.body, requestHeaders(payload?.token))
+        return response
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error)
+    }
+}
+
 
 export const NoteApiServices = {
     createNote,
     getAllNotes,
     deleteNote,
     updateNote,
-    getNoteDetails
+    getNoteDetails,
+    summarizeNote
 }

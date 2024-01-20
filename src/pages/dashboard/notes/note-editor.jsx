@@ -2,7 +2,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import Note from '../../../components/notes/index'
 import React, { useEffect, useState } from 'react'
 import { get } from 'lodash';
-import { getNoteDetailsRequest, updateNoteRequest } from '@/store/reducers/note-reducer';
+import { getNoteDetailsRequest, summarizeNoteRequest, updateNoteRequest } from '@/store/reducers/note-reducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { showFaliureToast } from '@/utils/toast-helpers';
 import { useDispatch } from 'react-redux';
@@ -17,6 +17,7 @@ const NoteEditor = () => {
   const [currentNoteDetails, setCurrentNoteDetails] = useState(null)
 
   const course_id = get(state, 'course_id', null);
+  const course_title = get(state, 'course_title', null);
   const token = get(state, 'token', null);
 
   const handleGetNoteDetails = () => {
@@ -39,7 +40,6 @@ const NoteEditor = () => {
     }
   }
 
-
   useEffect(() => handleGetNoteDetails(), [])
 
   const handleEditNote = (updatedContent) => {
@@ -51,7 +51,30 @@ const NoteEditor = () => {
 
     if (!token || !course_id) return;
 
+    setLoading(true);
     dispatch(updateNoteRequest({ token, body, note_id }))
+      .then(unwrapResult)
+      .then(() => {
+        setLoading(false)
+        handleGetNoteDetails()
+      })
+      .catch((err) => {
+        showFaliureToast(err?.response?.data?.error)
+        setLoading(false)
+      })
+
+  }
+
+  const handleSummarizeNote = (updatedContent) => {
+    const body = {
+      data: JSON.stringify(updatedContent?.data),
+      note_id,
+      course_title: updatedContent?.title
+    }
+    if (!token || !note_id) return;
+
+    setLoading(true);
+    dispatch(summarizeNoteRequest({ token, body, note_id }))
       .then(unwrapResult)
       .then(() => {
         setLoading(false)
@@ -66,7 +89,7 @@ const NoteEditor = () => {
 
   return (
     <div>
-      <Note loading={loading} handleSave={handleEditNote} previousData={currentNoteDetails} />
+      <Note loading={loading} handleSummarize={handleSummarizeNote} handleSave={handleEditNote} previousData={currentNoteDetails} />
     </div>
   )
 }

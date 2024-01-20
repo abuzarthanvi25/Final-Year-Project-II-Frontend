@@ -15,7 +15,8 @@ const CONSTANT = {
     getNote: '/get-note',
     deleteNote: '/delete-note',
     updateNote: '/update-note',
-    getNoteDetails: '/get-note'
+    getNoteDetails: '/get-note',
+    summarizeNote: '/summarize-note'
   }
   
   export default CONSTANT

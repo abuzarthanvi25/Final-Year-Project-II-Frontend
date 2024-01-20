@@ -56,8 +56,8 @@ export function Courses() {
         handleGetCourses();
     }, [])
 
-    const handleViewNotes = (id) => {
-        navigate(`/dashboard/courses/${id}`)
+    const handleViewNotes = (id, course_title) => {
+        navigate(`/dashboard/courses/${id}`, {state: {course_title}})
     }
 
     const handleAddCourse = (body) => {
@@ -156,7 +156,7 @@ export function Courses() {
                                         <CourseCard handleEditAction={() => {
                                             setPreviousData({title, description, course_id: _id});
                                             setOpen(true);
-                                        }} handleDeleteCourse={() => handleDeleteCourse(_id)} handleViewNotes={() => handleViewNotes(_id)} title={title} description={description} type={type} members={members} />
+                                        }} handleDeleteCourse={() => handleDeleteCourse(_id)} handleViewNotes={() => handleViewNotes(_id, title)} title={title} description={description} type={type} members={members} />
                                     </div>
                                 </Grid>
                             ))
