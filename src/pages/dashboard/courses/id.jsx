@@ -48,6 +48,7 @@ const CourseDetails = () => {
     try {
       if (!token || !course_id) return;
 
+      setLoading(true)
       dispatch(getAllNotesRequest({ token, course_id }))
         .then(unwrapResult)
         .then(() => {
@@ -68,11 +69,12 @@ const CourseDetails = () => {
   const handleDeleteNote = (note_id) => {
     try {
       if (!token || !note_id) return;
+
+      setLoading(true)
       dispatch(deleteNoteRequest({ token, note_id }))
         .then(unwrapResult)
         .then(() => {
           handleGetNotes()
-          setLoading(false)
         })
         .catch((err) => {
           showFaliureToast(err?.response?.data?.message)
