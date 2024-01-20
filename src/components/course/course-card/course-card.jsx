@@ -59,7 +59,7 @@ const CourseCard = ({title = 'Lorem ipsum dolor .', type = 'Lorem ipsum',descrip
       <Tooltip style={{maxWidth: '20px'}} placement="top-end" content={<div className='w-80'>
         <Typography className='text-white font-medium text-xs'>{description}</Typography>
       </div>}>
-        <Typography className="font-normal text-black my-1">{truncateString(description, 120)}</Typography>
+        <Typography className="font-normal text-black my-1">{truncateString(description, 100)}</Typography>
       </Tooltip>
       {!!members.length && <Typography className="text-xs font-extrabold text-gray-900 mr-2 text-right">Members</Typography>}
       <div className="flex justify-between my-1 items-center flex-wrap">
