@@ -1,6 +1,7 @@
 import { requestHeaders } from '@/utils/helpers'
 import ApiResource from '../../services/api'
 import ApiConstants from '../../services/api-constants'
+import { formDataInstance } from "../../services/api"
 
 async function createNote(payload, thunkAPI) {
     try {
@@ -54,11 +55,32 @@ async function updateNote(payload, thunkAPI) {
     }
 }
 
+async function summarizeNote(payload, thunkAPI) {
+    try {
+        if (!payload?.note_id) return;
+        const response = await ApiResource.post(`${ApiConstants.summarizeNote}/${payload?.note_id}`, payload?.body, requestHeaders(payload?.token))
+        return response
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error)
+    }
+}
+
+async function extractTextFromImage(payload, thunkAPI) {
+    try {
+        const response = await formDataInstance.post(ApiConstants.imageToNote, payload?.body, requestHeaders(payload?.token))
+        return response
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error)
+    }
+}
+
 
 export const NoteApiServices = {
     createNote,
     getAllNotes,
     deleteNote,
     updateNote,
-    getNoteDetails
+    getNoteDetails,
+    summarizeNote,
+    extractTextFromImage
 }
