@@ -44,6 +44,12 @@ export const summarizeNoteRequest = createAsyncThunk('NoteReducer/summarizeNoteR
   return response
 })
 
+export const imageToNoteRequest = createAsyncThunk('NoteReducer/imageToNoteRequest', async (payload, thunkApi) => {
+  const response = await NoteApiServices.extractTextFromImage(payload, thunkApi)
+
+  return response
+})
+
 export const deleteNoteRequest = createAsyncThunk('NoteReducer/deleteNoteRequest', async (payload, thunkApi) => {
   const response = await NoteApiServices.deleteNote(payload, thunkApi)
 

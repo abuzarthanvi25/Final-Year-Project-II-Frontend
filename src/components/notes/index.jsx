@@ -1,5 +1,5 @@
 import { Button, IconButton, Input, Menu, MenuHandler, MenuItem, MenuList, Typography } from '@material-tailwind/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import "../editor/editor.css"
@@ -7,11 +7,21 @@ import { CircularProgress, Skeleton, TextField } from '@mui/material';
 import { DocumentTextIcon, ChatBubbleBottomCenterTextIcon, PhotoIcon } from '@heroicons/react/24/solid';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import NoteSkeleton from './note-skeleton';
+import CustomModal from '../modals';
+import ImageUpload from './image-upload';
 
 const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageToNote }) => {
   const [value, setValue] = useState('');
   const [title, setTitle] = useState('');
   const [text, setContentText] = useState('');
+  const [open, setOpen] = useState(false);
+
+  const quillRef = useRef();
+
+  const handleGetText = () => {
+    const plainText = quillRef.current.editor.getText();
+    setContentText(plainText)
+  }
 
   const handleOnChange = (content, _, __, editor) => {
     setValue(content);
@@ -22,8 +32,13 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
     if (previousData) {
       setValue(JSON.parse(previousData?.data))
       setTitle(previousData?.title)
+      handleGetText();
     }
   }, [previousData])
+
+  useEffect(() => {
+    handleGetText()
+  }, [value])
 
   const modules = {
     toolbar: [
@@ -42,9 +57,14 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
     ]
   }
 
+  const handleOnClose = () => setOpen(false)
+
   return (
     <div style={{ pointerEvents: loading ? 'none' : 'all' }} className='container'>
       <div >
+        <CustomModal open={open} onClose={handleOnClose}>
+          <ImageUpload handleCloseModal={handleOnClose} handleImageUpload={(file) => handleImageToNote(value, setValue, file)} />
+        </CustomModal>
         <form className='my-2 flex justify-between' onSubmit={(e) => {
           e.preventDefault();
           handleSave({ data: value, title: title })
@@ -81,10 +101,10 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
                 </div>
               </MenuItem>
               }
-              <MenuItem onClick={handleImageToNote} className="flex items-center gap-3 text-center">
+              <MenuItem onClick={() => setOpen(true)} className="flex items-center gap-3 text-center">
                 <div className='flex items-center'  >
                 <PhotoIcon className="h-5 w-5 me-2 text-blue-gray-500" />
-                  <Typography className='text-sm font-semibold'>Embbed text from an image</Typography>
+                  <Typography className='text-sm font-semibold'>Embbed text from image</Typography>
                 </div>
               </MenuItem>
             </MenuList>
@@ -93,7 +113,7 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
       {
         loading ? 
         <NoteSkeleton/> :
-      <ReactQuill modules={modules} theme="snow" value={value} onChange={handleOnChange} />
+      <ReactQuill ref={quillRef} modules={modules} theme="snow" value={value} onChange={handleOnChange} />
       }
     </div>
   )

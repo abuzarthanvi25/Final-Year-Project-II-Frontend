@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Note from './index'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { get } from 'lodash';
-import { createNoteRequest } from '@/store/reducers/note-reducer';
+import { createNoteRequest, imageToNoteRequest } from '@/store/reducers/note-reducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { showFaliureToast } from '@/utils/toast-helpers';
 import { useDispatch } from 'react-redux';
@@ -38,9 +38,36 @@ const CreateNote = () => {
 
     }
 
+    const handleImageToNote = (editorValue, setEditorValue, image) => {
+      try {
+        if(!image) return;
+  
+        setLoading(true);
+        const formData = new FormData();
+        formData.append("image", image);
+        const body = formData;
+  
+        dispatch(imageToNoteRequest({ token, body }))
+        .then(unwrapResult)
+        .then((response) => {
+          setLoading(false)
+          if(typeof response?.data?.data == 'string'){
+            setEditorValue(editorValue + JSON.parse(response?.data?.data))
+          }
+        })
+        .catch((err) => {
+          showFaliureToast(err?.response?.data?.error)
+          setLoading(false)
+        })
+        
+      } catch (error) {
+        console.log(`error at handleImageToNote`, error);
+      }
+    }
+
   return (
     <div>
-      <Note loading={loading} handleSave={handleAddNote}/>
+      <Note handleImageToNote={handleImageToNote} loading={loading} handleSave={handleAddNote}/>
     </div>
   )
 }
