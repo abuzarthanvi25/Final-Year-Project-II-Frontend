@@ -32,8 +32,8 @@ export function Profile() {
   const [loading, setLoading] = useState(false);
   const [profileDetailsLocal, setProfileDetailsLocal] = useState(null)
 
-  const {userDetails} = useSelector((state) => state.auth)
-  const {profileDetails} = useSelector((state) => state.user)
+  const { userDetails } = useSelector((state) => state.auth)
+  const { profileDetails } = useSelector((state) => state.user)
 
   const token = get(userDetails, 'token', null);
 
@@ -41,7 +41,7 @@ export function Profile() {
   const email = get(profileDetailsLocal, "email", "");
   const phone_number = get(profileDetailsLocal, "phone_number", "");
   const bio = get(profileDetailsLocal, "bio", "");
-  const profile_picture = get(profileDetailsLocal, "profile_picture", "");
+  const profile_picture = get(profileDetailsLocal, "profile_picture.url", "");
   const friends = get(profileDetailsLocal, "friends", []);
   const courses = get(profileDetailsLocal, "courses", []);
 
@@ -50,7 +50,7 @@ export function Profile() {
   }, [])
 
   useEffect(() => {
-    if(profileDetails){
+    if (profileDetails) {
       setProfileDetailsLocal(profileDetails);
     }
   }, [profileDetails])
@@ -65,21 +65,21 @@ export function Profile() {
 
   const handleGetProfile = () => {
     try {
-      if(token){
+      if (token) {
         setLoading(true);
 
-        dispatch(getProfileDetailsRequest({token}))
-        .then(unwrapResult)
-        .then(() => {
-          setLoading(false)
-        })
-        .catch(err => {
-          showFaliureToast(err?.response?.data?.message)
-          if(err?.response?.data?.message === 'User not found'){
-            handleLogout();
-          }
-          setLoading(false)
-        })
+        dispatch(getProfileDetailsRequest({ token }))
+          .then(unwrapResult)
+          .then(() => {
+            setLoading(false)
+          })
+          .catch(err => {
+            showFaliureToast(err?.response?.data?.message)
+            if (err?.response?.data?.message === 'User not found') {
+              handleLogout();
+            }
+            setLoading(false)
+          })
 
       }
     } catch (error) {
@@ -113,17 +113,25 @@ export function Profile() {
             <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
               <div className="flex items-center gap-6">
                 {
-                  !loading && profile_picture ? 
-                  <CustomAvatar sx={{height: '74px', width: '74px', borderRadius: '8px'}} src={profile_picture ??"/img/bruce-mars.jpeg"} variant="rounded" name='bruce mars' className={"rounded-lg shadow-lg shadow-blue-gray-500/40"} /> :
-                  <Skeleton animation='wave' height={'74px'} width={'74px'} />
+                  loading ? (
+                    <Skeleton variant="rectangular" className="rounded-md" animation='wave' height={'60px'} width={'60px'} />
+                  ) : (
+                    <CustomAvatar
+                      sx={{ height: '74px', width: '74px', borderRadius: '8px' }}
+                      src={profile_picture ?? "/img/bruce-mars.jpeg"}
+                      variant="rounded"
+                      name={full_name}
+                      className={"rounded-lg shadow-lg shadow-blue-gray-500/40"}
+                    />
+                  )
                 }
                 <div>
                   {
                     !loading && full_name ?
-                    <Typography variant="h5" color="blue-gray" className="mb-1">
-                    {full_name}
-                  </Typography> :
-                  <Skeleton animation='wave' height={'50px'} width={'20ch'} />
+                      <Typography variant="h5" color="blue-gray" className="mb-1">
+                        {full_name}
+                      </Typography> :
+                      <Skeleton animation='wave' height={'50px'} width={'20ch'} />
                   }
                   <Typography
                     variant="small"

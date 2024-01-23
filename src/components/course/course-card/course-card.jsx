@@ -70,7 +70,7 @@ const CourseCard = ({title = 'Lorem ipsum dolor .', type = 'Lorem ipsum',descrip
         {members.map(({ profile_picture, full_name }, key) => (
           <Tooltip placement="bottom-end" key={key} content={full_name}>
             <Avatar
-              src={profile_picture ? profile_picture : '/img/placeholder-avatar.webp'}
+              src={profile_picture?.url ? profile_picture?.url : '/img/placeholder-avatar.webp'}
               alt={full_name}
               size="sm"
               variant="circular"

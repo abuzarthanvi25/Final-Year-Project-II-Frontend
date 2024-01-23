@@ -19,7 +19,7 @@ const NotesCardSmall = ({ profile_picture = '', full_name = '', title = 'Shit No
                     <div className='flex justify-evenly'>
                         <Tooltip placement="bottom-start" content={full_name}>
                             <Avatar
-                                src={profile_picture ? profile_picture : '/img/placeholder-avatar.webp'}
+                                src={profile_picture?.url ? profile_picture?.url : '/img/placeholder-avatar.webp'}
                                 alt={full_name}
                                 size="xs"
                                 variant="circular"
