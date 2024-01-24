@@ -3,7 +3,7 @@ import CustomAvatar from "../custom-avatar/index"
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { CircularProgress } from '@mui/material';
 
-const UserDetailsSmall = ({email = '', full_name = '', profile_picture = '', loading = false, isAlreadyFriend = false, handleAddFriend = () => {}}  ) => {
+const MemberComponentSmall = ({email = '', full_name = '', profile_picture = '', loading = false, isAlreadyAdded = false, handleAddMember = () => {}}  ) => {
   return (
     <div className="flex items-center justify-between gap-5 bg-gray-300 px-3 py-4 w-full my-2 rounded-md">
       <div className="flex items-center gap-4 w-full">
@@ -22,13 +22,12 @@ const UserDetailsSmall = ({email = '', full_name = '', profile_picture = '', loa
         </div>
       </div>
       {
-        isAlreadyFriend ? <div className='w-4/12 flex justify-around items-center shadow-md bg-gray-600 px-3 py-2 rounded-md'><Typography className='font-sans font-bold text-xs align-middle text-center text-white uppercase'>Friend</Typography><DoneAllIcon style={{color:'#00CA06'}} className='text-xs'/></div> : 
-        <Button onClick={handleAddFriend} disabled={loading || isAlreadyFriend} className='w-4/12' variant="filled" size="sm">
-        {loading ? <CircularProgress className='text-xs' style={{color:'#fff', width:'14px', height:'14px'}}/> : "Add Friend"}
-  </Button>
+        <Button onClick={handleAddMember} disabled={loading} className='w-4/12' variant="filled" size="sm">
+        {loading ? <CircularProgress className='text-xs' style={{color:'#fff', width:'14px', height:'14px'}}/> : isAlreadyAdded ? "Remove Member" : "Add Member"}
+        </Button>
       }
     </div>
   )
 }
 
-export default UserDetailsSmall
+export default MemberComponentSmall
