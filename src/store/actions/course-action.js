@@ -24,9 +24,9 @@ async function updateCourse(payload, thunkAPI) {
 
 async function getAllCourses(payload, thunkAPI) {
   try {
-    const response = await ApiResource.get(`${ApiConstants.getAllCourses}?type=Personal`, requestHeaders(payload?.token))
+    const response = await ApiResource.get(`${ApiConstants.getAllCourses}?type=${payload.type}`, requestHeaders(payload?.token))
 
-    return response
+    return {...response, type: payload.type}
   } catch (error) {
     return thunkAPI.rejectWithValue(error)
   }

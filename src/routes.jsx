@@ -44,7 +44,7 @@ export const routes = [
         icon: <FolderIcon {...icon} />,
         name: "Courses",
         path: "/courses",
-        element: <Courses />,
+        element: <Courses type={'Personal'} />,
       },
     ]
   },
@@ -54,8 +54,8 @@ export const routes = [
     pages: [
       {
         icon: <UserGroupIcon {...icon} />,
-        name: "Group Projects",
-        path: "/group-projects",
+        name: "Group Courses",
+        path: "/group-courses",
         element: <GroupProjects />,
       },
       {

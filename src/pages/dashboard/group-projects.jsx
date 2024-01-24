@@ -1,15 +1,9 @@
-import {
-    Card,
-} from "@material-tailwind/react";
+import Courses from "../dashboard/courses/courses"
 
 export function GroupProjects() {
 
     return (
-        <div className="mx-auto my-20 flex max-w-screen-lg flex-col gap-8">
-            <Card>
-                <></>
-            </Card>
-        </div>
+        <Courses type={'Group'} />
     );
 }
 

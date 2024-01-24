@@ -1,5 +1,6 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import Note from '../../../components/notes/index'
+import CollaborativeNote from '../../../components/notes/collaborative-note'
 import React, { useEffect, useState } from 'react'
 import { get } from 'lodash';
 import { getNoteDetailsRequest, summarizeNoteRequest, updateNoteRequest, imageToNoteRequest } from '@/store/reducers/note-reducer';
@@ -7,9 +8,9 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { showFaliureToast } from '@/utils/toast-helpers';
 import { useDispatch } from 'react-redux';
 
-const NoteEditor = () => {
+const NoteEditor = ({ courseType }) => {
   const { state } = useLocation();
-  const {id: note_id} = useParams();
+  const { id: note_id } = useParams();
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false)
@@ -38,7 +39,11 @@ const NoteEditor = () => {
     }
   }
 
-  useEffect(() => handleGetNoteDetails(), [])
+  useEffect(() => {
+    if(courseType == 'Group') return
+
+    handleGetNoteDetails()
+  }, [])
 
   const handleEditNote = (updatedContent) => {
     const body = {
@@ -87,7 +92,7 @@ const NoteEditor = () => {
 
   const handleImageToNote = (editorValue, setEditorValue, image) => {
     try {
-      if(!image) return;
+      if (!image) return;
 
       setLoading(true);
       const formData = new FormData();
@@ -95,18 +100,18 @@ const NoteEditor = () => {
       const body = formData;
 
       dispatch(imageToNoteRequest({ token, body }))
-      .then(unwrapResult)
-      .then((response) => {
-        setLoading(false)
-        if(typeof response?.data?.data == 'string'){
-          setEditorValue(editorValue + JSON.parse(response?.data?.data))
-        }
-      })
-      .catch((err) => {
-        showFaliureToast(err?.response?.data?.error)
-        setLoading(false)
-      })
-      
+        .then(unwrapResult)
+        .then((response) => {
+          setLoading(false)
+          if (typeof response?.data?.data == 'string') {
+            setEditorValue(editorValue + JSON.parse(response?.data?.data))
+          }
+        })
+        .catch((err) => {
+          showFaliureToast(err?.response?.data?.error)
+          setLoading(false)
+        })
+
     } catch (error) {
       console.log(`error at handleImageToNote`, error);
     }
@@ -114,7 +119,12 @@ const NoteEditor = () => {
 
   return (
     <div>
-      <Note handleImageToNote={handleImageToNote} loading={loading} handleSummarize={handleSummarizeNote} handleSave={handleEditNote} previousData={currentNoteDetails} />
+      {
+        courseType == 'Personal' ?
+          <Note handleImageToNote={handleImageToNote} loading={loading} handleSummarize={handleSummarizeNote} handleSave={handleEditNote} previousData={currentNoteDetails} />
+          :
+          <CollaborativeNote handleImageToNote={handleImageToNote} loading={loading} handleSummarize={handleSummarizeNote} handleSave={handleEditNote} previousData={currentNoteDetails} />
+      }
     </div>
   )
 }

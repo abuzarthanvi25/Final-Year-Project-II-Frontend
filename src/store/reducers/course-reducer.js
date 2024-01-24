@@ -10,8 +10,8 @@ const loadingStates = {
 const initialState = {
   error: null,
   loading: loadingStates.idle,
-  personalCourses: [],
-  groupCourses: [],
+  courses: [],
+  courseType: ""
 }
 
 export const getAllCoursesRequest = createAsyncThunk('CourseReducer/getAllCoursesRequest', async (payload, thunkApi) => {
@@ -50,12 +50,14 @@ const CourseReducer = createReducer(initialState, builder => {
     .addCase(getAllCoursesRequest.fulfilled, (state, action) => {
       state.error = null
       state.loading = loadingStates.idle
-      state.personalCourses = [ ...action.payload.data?.data?.courses ]
+      state.courses = [ ...action.payload.data?.data?.courses ]
+      state.courseType = action.payload.type
     })
     .addCase(getAllCoursesRequest.rejected, (state, action) => {
       state.error = action.payload?.response?.data
       state.loading = loadingStates.idle
-      state.profileDetails = null
+      state.courses = null
+      state.courseType = ""
     })
 
     //NOTE - Logout case

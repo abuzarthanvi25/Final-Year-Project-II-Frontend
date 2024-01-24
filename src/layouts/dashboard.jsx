@@ -12,6 +12,7 @@ import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
 import Notes from "@/pages/dashboard/courses/id";
 import NoteEditor from "@/pages/dashboard/notes/note-editor";
 import CreateNote from "@/components/notes/create-note";
+import NoteDetails from "../pages/dashboard/notes/id";
 
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -47,7 +48,9 @@ export function Dashboard() {
           )}
 
           <Route exact path={'/courses/:id'} element={<Notes/>} />
-          <Route path={'/notes/edit/:id'} element={<NoteEditor/>} />
+          <Route exact path={'/group-courses/:id'} element={<Notes/>} />
+          <Route path={'/notes/edit/:id'} element={<NoteEditor courseType={"Personal"}/>} />
+          <Route path={'/group-notes/edit/:id'} element={<NoteEditor courseType={"Group"}/>} />
           <Route path={'/notes/create-note'} element={<CreateNote/>} />
         </Routes>
         {/* <div className="text-blue-gray-600">

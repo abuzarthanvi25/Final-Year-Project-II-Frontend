@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-export function Courses() {
+export function Courses({type}) {
     const { userDetails } = useSelector((state) => state.auth);
 
     const [loading, setLoading] = useState(false);
@@ -19,16 +19,16 @@ export function Courses() {
     const [previousData, setPreviousData] = useState(null);
     const [open, setOpen] = useState(false);
 
-    const { personalCourses } = useSelector((state) => state.courses);
+    const { courses } = useSelector((state) => state.courses);
 
     const token = get(userDetails, "token", null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (personalCourses) {
-            setCoursesLocal(personalCourses);
+        if (courses) {
+            setCoursesLocal(courses);
         }
-    }, [personalCourses])
+    }, [courses])
 
     const dispatch = useDispatch();
 
@@ -37,7 +37,7 @@ export function Courses() {
             setLoading(true);
 
             if (token) {
-                dispatch(getAllCoursesRequest({ token }))
+                dispatch(getAllCoursesRequest({ token, type }))
                     .then(unwrapResult)
                     .then(() => {
                         setLoading(false)
@@ -57,15 +57,21 @@ export function Courses() {
     }, [])
 
     const handleViewNotes = (id, course_title) => {
-        navigate(`/dashboard/courses/${id}`, {state: {course_title}})
+        if(type == 'Personal'){
+            navigate(`/dashboard/courses/${id}`, {state: {course_title}})
+        }else{
+            navigate(`/dashboard/group-courses/${id}`, {state: {course_title}})
+        }
     }
 
     const handleAddCourse = (body) => {
         try {
             setLoading(true);
 
+            const payload = {...body, type}
+
             if (token) {
-                dispatch(addCourseRequest({ token, body }))
+                dispatch(addCourseRequest({ token, body:payload }))
                     .then(unwrapResult)
                     .then(() => {
                         setOpen(false);
@@ -134,7 +140,7 @@ export function Courses() {
     return (
         <div>
             <CustomModal open={open} onClose={() => setOpen(false)}>
-                <AddCourse previousData={previousData} handleAddCourse={previousData ? handleEditCourse : handleAddCourse} loading={loading} />
+                <AddCourse type={type} previousData={previousData} handleAddCourse={previousData ? handleEditCourse : handleAddCourse} loading={loading} />
             </CustomModal>
             <div className="w-full flex justify-start mt-3">
                 <Button onClick={() => setOpen(true)} size='lg' className="ms-10">Add Courses</Button>
