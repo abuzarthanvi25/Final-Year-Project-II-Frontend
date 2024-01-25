@@ -1,4 +1,4 @@
-import { Button, IconButton, Input, Menu, MenuHandler, MenuItem, MenuList, Typography } from '@material-tailwind/react';
+import { Button, Input, Menu, MenuHandler, MenuItem, MenuList, Typography } from '@material-tailwind/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -9,12 +9,16 @@ import PsychologyIcon from '@mui/icons-material/Psychology';
 import NoteSkeleton from './note-skeleton';
 import CustomModal from '../modals';
 import ImageUpload from './image-upload';
+import { io } from "socket.io-client"
+import { useParams } from 'react-router-dom';
 
 const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageToNote }) => {
   const [value, setValue] = useState('');
   const [title, setTitle] = useState('');
   const [text, setContentText] = useState('');
   const [open, setOpen] = useState(false);
+  const [socket, setSocket] = useState(null);
+  const {id: note_id} = useParams()
 
   const quillRef = useRef();
 
@@ -23,18 +27,52 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
     setContentText(plainText)
   }
 
-  const handleOnChange = (content, _, __, editor) => {
-    setValue(content);
-    setContentText(editor.getText())
+  const SAVE_INTERVAL_MS = 3000
+
+  const handleOnChange = (content, _, source, editor) => {
+    if (socket == null || source !== "user") return;
+    socket.emit("send-note-changes", content);
   }
 
   useEffect(() => {
-    if (previousData) {
-      setValue(JSON.parse(previousData?.data))
-      setTitle(previousData?.title)
-      handleGetText();
+    const socket = io("http://localhost:5001/");
+
+    setSocket(socket)
+  }, [])
+
+  useEffect(() => {
+    if (socket == null) return;
+
+    socket.once("load-note-content", ({data, title}) => {
+        setValue(data)
+        setTitle(title)
+        handleGetText()
+    })
+
+    socket.emit("get-note-content", note_id);
+}, [socket])
+
+// useEffect(() => {
+//     if (socket == null) return
+
+//     const interval = setInterval(() => {
+//       socket.emit("save-note-changes", JSON.stringify(value))
+//     }, SAVE_INTERVAL_MS)
+
+//     return () => {
+//       clearInterval(interval)
+//     }
+//   }, [socket])
+
+useEffect(() => {
+    if (socket == null) return;
+
+    const handler = synchronizedData => {
+        setValue(synchronizedData)
     }
-  }, [previousData])
+
+    socket.on("receive-note-changes", handler)
+}, [socket])
 
   useEffect(() => {
     handleGetText()
@@ -119,4 +157,4 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
   )
 }
 
-export default Note
+export default React.memo(Note)

@@ -35,25 +35,27 @@ export function ProfileInfoCard({ title, description, details, action }) {
         {details && (
           <ul className="flex flex-col gap-4 p-0">
             {Object.keys(details).map((el, key) => (
-              <li key={key} className="flex items-center gap-4">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-semibold capitalize"
-                >
-                  {el}:
-                </Typography>
-                {typeof details[el] === "string" ? (
-                  <Typography
-                    variant="small"
-                    className="font-normal text-blue-gray-500"
-                  >
-                    {details[el]}
-                  </Typography>
-                ) : (
-                  details[el]
-                )}
-              </li>
+                details[el] && (
+                  <li key={key} className="flex items-center gap-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-semibold capitalize"
+                    >
+                      {el}:
+                    </Typography>
+                    {typeof details[el] === "string" ? (
+                      <Typography
+                        variant="small"
+                        className="font-normal text-blue-gray-500"
+                      >
+                        {details[el]}
+                      </Typography>
+                    ) : (
+                      details[el]
+                    )}
+                  </li>
+                )
             ))}
           </ul>
         )}

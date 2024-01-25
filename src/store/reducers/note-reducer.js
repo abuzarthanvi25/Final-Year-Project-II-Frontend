@@ -10,8 +10,7 @@ const loadingStates = {
 const initialState = {
   error: null,
   loading: loadingStates.idle,
-  personalNotes: [],
-  groupNotes: [],
+  notes: [],
 }
 
 export const getAllNotesRequest = createAsyncThunk('NoteReducer/getAllNotesRequest', async (payload, thunkApi) => {
@@ -68,12 +67,12 @@ const NoteReducer = createReducer(initialState, builder => {
     .addCase(getAllNotesRequest.fulfilled, (state, action) => {
       state.error = null
       state.loading = loadingStates.idle
-      state.personalNotes = [ ...action.payload.data?.data?.notes ]
+      state.notes = [ ...action.payload.data?.data?.notes ]
     })
     .addCase(getAllNotesRequest.rejected, (state, action) => {
       state.error = action.payload?.response?.data
       state.loading = loadingStates.idle
-      state.profileDetails = null
+      state.notes = []
     })
 
     //NOTE - Logout case

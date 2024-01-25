@@ -1,12 +1,12 @@
 export const truncateString = (str = '', limit = 10) => {
-    if (typeof str !== 'string') return
-  
-    if (str.length > limit) {
-      return str.slice(0, limit) + '...'
-    }
-  
-    return str
+  if (typeof str !== 'string') return
+
+  if (str.length > limit) {
+    return str.slice(0, limit) + '...'
   }
+
+  return str
+}
 
 export const requestHeaders = token => {
   const config = {
@@ -48,3 +48,15 @@ export function formatDateNew(inputDateString) {
 
   return `${formattedDate}`;
 }
+
+export const objectToFormData = (obj) => {
+  const formData = new FormData();
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (value !== null && value !== 'null') {
+      formData.append(key, value);
+    }
+  }
+
+  return formData;
+};

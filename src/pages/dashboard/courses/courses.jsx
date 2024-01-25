@@ -1,4 +1,5 @@
 import AddCourse from '@/components/course/add-course/course-form';
+import GroupCourse from '@/components/course/add-course/group-course-form';
 import CourseCard from "@/components/course/course-card/course-card";
 import CustomModal from '@/components/modals';
 import { getAllCoursesRequest, addCourseRequest, deleteCourseRequest, updateCourseRequest } from "@/store/reducers/course-reducer";
@@ -11,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-export function Courses() {
+export function Courses({ type }) {
     const { userDetails } = useSelector((state) => state.auth);
 
     const [loading, setLoading] = useState(false);
@@ -19,16 +20,17 @@ export function Courses() {
     const [previousData, setPreviousData] = useState(null);
     const [open, setOpen] = useState(false);
 
-    const { personalCourses } = useSelector((state) => state.courses);
+    const { courses } = useSelector((state) => state.courses);
 
     const token = get(userDetails, "token", null);
+    const userId = get(userDetails, "user._id", null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (personalCourses) {
-            setCoursesLocal(personalCourses);
+        if (courses) {
+            setCoursesLocal(courses);
         }
-    }, [personalCourses])
+    }, [courses])
 
     const dispatch = useDispatch();
 
@@ -37,7 +39,7 @@ export function Courses() {
             setLoading(true);
 
             if (token) {
-                dispatch(getAllCoursesRequest({ token }))
+                dispatch(getAllCoursesRequest({ token, type }))
                     .then(unwrapResult)
                     .then(() => {
                         setLoading(false)
@@ -57,15 +59,21 @@ export function Courses() {
     }, [])
 
     const handleViewNotes = (id, course_title) => {
-        navigate(`/dashboard/courses/${id}`, {state: {course_title}})
+        if (type == 'Personal') {
+            navigate(`/dashboard/courses/${id}`, { state: { course_title } })
+        } else {
+            navigate(`/dashboard/group-courses/${id}`, { state: { course_title } })
+        }
     }
 
     const handleAddCourse = (body) => {
         try {
             setLoading(true);
 
+            const payload = { ...body, type }
+
             if (token) {
-                dispatch(addCourseRequest({ token, body }))
+                dispatch(addCourseRequest({ token, body: payload }))
                     .then(unwrapResult)
                     .then(() => {
                         setOpen(false);
@@ -131,13 +139,22 @@ export function Courses() {
         }
     }
 
+    const handleGetMembers = (members) => {
+        return members.filter((members) => members._id !== userId).map(({ _id }) => _id)
+    }
+
     return (
         <div>
             <CustomModal open={open} onClose={() => setOpen(false)}>
-                <AddCourse previousData={previousData} handleAddCourse={previousData ? handleEditCourse : handleAddCourse} loading={loading} />
+                {
+                    type == 'Personal' ?
+                        <AddCourse type={type} previousData={previousData} handleAddCourse={previousData ? handleEditCourse : handleAddCourse} loading={loading} />
+                        :
+                        <GroupCourse type={type} previousData={previousData} handleAddCourse={previousData ? handleEditCourse : handleAddCourse} loading={loading} />
+                }
             </CustomModal>
             <div className="w-full flex justify-start mt-3">
-                <Button onClick={() => setOpen(true)} size='lg' className="ms-10">Add Courses</Button>
+                <Button onClick={() => { setOpen(true), setPreviousData(null) }} size='lg' className="ms-10">Add Courses</Button>
             </div>
             <div className="w-full">
                 <Typography className="text-center text-xl font-light text-gray-900">All Courses</Typography>
@@ -154,7 +171,7 @@ export function Courses() {
                                 <Grid className='m-0 p-0' key={_id} item md={4} xs={12} sm={6} lg={4} xl={4}>
                                     <div className="mx-auto my-6 flex max-w-xs flex-col gap-8">
                                         <CourseCard handleEditAction={() => {
-                                            setPreviousData({title, description, course_id: _id});
+                                            setPreviousData({ title, description, course_id: _id, members: members ? handleGetMembers(members) : [] });
                                             setOpen(true);
                                         }} handleDeleteCourse={() => handleDeleteCourse(_id)} handleViewNotes={() => handleViewNotes(_id, title)} title={title} description={description} type={type} members={members} />
                                     </div>

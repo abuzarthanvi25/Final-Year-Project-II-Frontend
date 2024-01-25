@@ -9,20 +9,19 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Divider from '@mui/material/Divider';
 import NotesCardSmallSkeleton from '@/components/notes/skeleton-notes-card-small';
 
-const CourseDetails = () => {
+const NotesList = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {state} = useLocation();
 
   const { userDetails } = useSelector((state) => state.auth);
   const { profileDetails } = useSelector((state) => state.user)
-  const { personalNotes } = useSelector((state) => state.notes);
-  const { personalCourses } = useSelector((state) => state.courses);
+  const { notes } = useSelector((state) => state.notes);
+  const { courses, courseType } = useSelector((state) => state.courses);
 
   const token = get(userDetails, "token", null);
   const profile_picture = get(profileDetails, "profile_picture", null);
@@ -30,12 +29,13 @@ const CourseDetails = () => {
 
   const [loading, setLoading] = useState(false);
   const [notesLocal, setNotesLocal] = useState([]);
+  const [courseTypeLocal, setCourseTypeLocal] = useState("")
   const course_id = get(params, 'id', null); //NOTE - Fetch notes by course id
 
   const handleGetCourseTitle = () => {
     if(!course_id) return ''
 
-    const course = personalCourses?.find((course) => course._id == course_id)
+    const course = courses?.find((course) => course._id == course_id)
 
     if(course){
       return course?.title
@@ -85,16 +85,26 @@ const CourseDetails = () => {
       console.log(error);
     }
 
-
   }
 
   useEffect(() => handleGetNotes(), [])
 
   useEffect(() => {
-    if (personalNotes) {
-      setNotesLocal(personalNotes);
+    if (notes) {
+      setNotesLocal(notes);
     }
-  }, [personalNotes])
+    if(courseType){
+      setCourseTypeLocal(courseType)
+    }
+  }, [notes])
+
+  const handleNavigateToNote = (_id, title, updated_at, token, data, course_id) => {
+    if(courseType == 'Personal'){
+      navigate(`/dashboard/notes/edit/${_id}`, {state: {title, updated_at, token, data, course_id, course_title: handleGetCourseTitle()}})
+    }else{
+      navigate(`/dashboard/group-notes/edit/${_id}`, {state: {title, updated_at, token, data, course_id, course_title: handleGetCourseTitle()}})
+    }
+  }
 
   return (
     <div>
@@ -116,7 +126,7 @@ const CourseDetails = () => {
             )) :
              notesLocal?.length ? notesLocal.map(({ title, updated_at, _id, data }, index) => (
               <Grid key={index} item md={3}>
-                <NotesCardSmall loading={loading} handleDelete={() => handleDeleteNote(_id)} handleClickNote={() => navigate(`/dashboard/notes/edit/${_id}`, {state: {title, updated_at, token, data, course_id, course_title: handleGetCourseTitle()}})} profile_picture={profile_picture} full_name={full_name} title={title} updatedAt={formatDateNew(updated_at)} />
+                <NotesCardSmall loading={loading} handleDelete={() => handleDeleteNote(_id)} handleClickNote={() => handleNavigateToNote(_id, title, updated_at, token, data, course_id)} profile_picture={profile_picture} full_name={full_name} title={title} updatedAt={formatDateNew(updated_at)} />
               </Grid>
             ))
               : <div className='w-full h-full'><p className='text-center'>No Notes Found</p></div>
@@ -127,4 +137,4 @@ const CourseDetails = () => {
   )
 }
 
-export default CourseDetails
+export default NotesList

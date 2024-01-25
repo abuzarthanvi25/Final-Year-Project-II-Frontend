@@ -29,8 +29,8 @@ const SearchUsers = ({handleSearch = () => {}, loading = false, users = [], hand
             <Skeleton style={{ height: '100px' }} />
         ) : (
             !!users.length > 0 ? (
-            users.map(({ _id, full_name, email }, index) => (
-                <UserDetailsSmall handleAddFriend={() => handleAddFriend(_id)} key={index} isAlreadyFriend={isAlreadyFriend(_id)} loading={loading} full_name={full_name} email={email} />
+            users.map(({ _id, full_name, email, profile_picture }, index) => (
+                <UserDetailsSmall profile_picture={profile_picture?.url ?? ''} handleAddFriend={() => handleAddFriend(_id)} key={index} isAlreadyFriend={isAlreadyFriend(_id)} loading={loading} full_name={full_name} email={email} />
             ))
             ) : (
             <Typography style={{textAlign:'center', color: 'gray'}} variant='small'>No users found</Typography>

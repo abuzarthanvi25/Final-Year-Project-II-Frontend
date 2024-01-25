@@ -73,6 +73,8 @@ export function DashboardNavbar() {
 
   const token = get(userDetails, "token", null);
   const currentFriends = get(profileDetails, "friends", []);
+  const fullName = get(profileDetails, "full_name", '');
+  const profile_picture = get(profileDetails, "profile_picture.url", '');
 
   const handleGetProfile = () => {
     try {
@@ -299,7 +301,7 @@ export function DashboardNavbar() {
             <MenuList className="w-max border-0">
               <MenuItem className="flex items-center gap-3">
                 <Avatar
-                  src={profileDetails?.profile_picture ?? "https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"}
+                  src={profile_picture ?? "https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"}
                   alt="item-1"
                   size="sm"
                   variant="circular"
@@ -310,7 +312,7 @@ export function DashboardNavbar() {
                     color="blue-gray"
                     className="mb-1 font-normal"
                   >
-                    <strong>{profileDetails?.full_name ?? 'John Doe'}</strong>
+                    <strong>{fullName ?? 'John Doe'}</strong>
                   </Typography>
                   <Typography
                     variant="paragraph"

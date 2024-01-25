@@ -4,13 +4,13 @@ import { CircularProgress, TextField } from '@mui/material'
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react'
 
-const AddCourse = ({loading = false, handleAddCourse = () => {}, previousData = null}) => {
+const AddCourse = ({loading = false, handleAddCourse = () => {}, previousData = null, type}) => {
 
     const formik = useFormik({
         initialValues: addCourseInitialValues,
         validationSchema: addCourseValidationSchema,
         onSubmit: values => {
-         handleAddCourse({...values, type: 'Personal'});
+         handleAddCourse({...values, type});
         }
       })
 
