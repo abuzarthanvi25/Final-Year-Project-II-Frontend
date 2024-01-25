@@ -1,5 +1,6 @@
 import { requestHeaders } from '@/utils/helpers'
 import ApiResource from '../../services/api'
+import {formDataInstance} from '../../services/api'
 import ApiConstants from '../../services/api-constants'
 
 async function getProfile(payload, thunkAPI) {
@@ -47,7 +48,7 @@ async function searchUsers(payload, thunkAPI) {
 
 async function updateProfile(payload, thunkAPI) {
   try {
-    const response = await ApiResource.patch(ApiConstants.updateUserProfile, payload?.body, requestHeaders(payload?.token))
+    const response = await formDataInstance.patch(ApiConstants.updateUserProfile, payload?.body, requestHeaders(payload?.token))
 
     return response
   } catch (error) {

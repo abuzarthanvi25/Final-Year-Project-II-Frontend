@@ -14,16 +14,18 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import Details from "@/widgets/custom-widgets/profile/tabs/details";
+import EditProfile from "@/widgets/custom-widgets/profile/tabs/edit-profile";
 import CustomAvatar from "../../components/custom-avatar/index";
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { get } from 'lodash';
-import { getProfileDetailsRequest } from '@/store/reducers/user-reducer';
+import { getProfileDetailsRequest, updateProfileRequet } from '@/store/reducers/user-reducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { showFaliureToast } from '@/utils/toast-helpers';
 import { Skeleton } from '@mui/material';
 import { logoutUserRequest } from '@/store/reducers/auth-reducer';
 import { useNavigate } from 'react-router-dom';
+import { objectToFormData } from "@/utils/helpers";
 
 export function Profile() {
   const dispatch = useDispatch();
@@ -54,6 +56,33 @@ export function Profile() {
       setProfileDetailsLocal(profileDetails);
     }
   }, [profileDetails])
+
+  const handleEditProfile = (payload) => {
+    try {
+      if (token) {
+        const body = objectToFormData(payload)
+
+        setLoading(true);
+
+        dispatch(updateProfileRequet({ token, body }))
+          .then(unwrapResult)
+          .then(() => {
+            handleGetProfile();
+            setLoading(false)
+          })
+          .catch(err => {
+            showFaliureToast(err?.response?.data?.message)
+            if (err?.response?.data?.message === 'User not found') {
+              handleLogout();
+            }
+            setLoading(false)
+          })
+
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleLogout = () => {
     try {
@@ -98,7 +127,7 @@ export function Profile() {
       label: "Edit Profile",
       value: "settings",
       icon: <Cog6ToothIcon className="-mt-1 mr-2 inline-block h-5 w-5" />,
-      component: <></>
+      component: <EditProfile previousData={profileDetailsLocal} loading={loading} handleEditProfile={handleEditProfile} />
     },
   ];
 
