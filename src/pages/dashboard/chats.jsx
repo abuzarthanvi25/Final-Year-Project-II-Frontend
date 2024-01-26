@@ -1,3 +1,4 @@
+import ChatMain from "@/components/chats/chat-main";
 import {
     Card,
 } from "@material-tailwind/react";
@@ -5,9 +6,9 @@ import {
 export function Chats() {
 
     return (
-        <div className="mx-auto my-20 flex max-w-screen-lg flex-col gap-8">
+        <div className="mt-2 flex mx-3 flex-col gap-8">
             <Card>
-                <></>
+                <ChatMain/> 
             </Card>
         </div>
     );

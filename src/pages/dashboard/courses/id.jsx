@@ -62,8 +62,6 @@ const NotesList = () => {
     } catch (error) {
       console.log(error);
     }
-
-
   }
 
   const handleDeleteNote = (note_id) => {
