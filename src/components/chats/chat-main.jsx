@@ -11,6 +11,8 @@ const ChatMain = () => {
   const [loading, setLoading] = useState(false);
   const [chatsLocal, setChatsLocal] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
+  const [chatDetails, setChatDetails] = useState({name: '', picture: ''});
+
   const dispatch = useDispatch();
   const { userDetails } = useSelector((state) => state.auth);
   const { allChatRooms } = useSelector((state) => state.chats);
@@ -52,10 +54,38 @@ const ChatMain = () => {
   
   const handleBack = () => setCurrentRoom(null)
 
+  useEffect(() => {
+    handleGetReceiver()
+  }, [currentRoom])
+
+  const handleGetReceiver = () => {
+    const currentChat = chatsLocal.find((chatRoom) => chatRoom?._id == currentRoom);
+    
+    if(currentChat){
+      const type = get(currentChat, "type", '');
+      
+      if(type == 'Personal'){
+        const members = get(currentChat, "members", []);
+        const receiver = members.filter((member) => member?._id !== userId)
+  
+        if(receiver[0]){
+          setChatDetails({name: receiver[0].full_name, picture: receiver[0].profile_picture?.url})
+        }
+      }else{
+        const name = get(currentChat, "name", '');
+        const image = get(currentChat, "image.url", '');
+        setChatDetails({name: name, picture: image});
+      }
+    }else{
+      setChatDetails({name: '', picture: ''});
+    }
+  }
+
+
   return (
     <div className='flex bg-white rounded-xl'>
       <ChatsList handleChangeRoom={handleChangeRoom} currentUser={userId} chats={chatsLocal ?? []}/>
-      <ChatHome sender_id={userId} handleBack={handleBack} room_id={currentRoom} />
+      <ChatHome chatDetails={chatDetails} sender_id={userId} handleBack={handleBack} room_id={currentRoom} />
     </div>
   )
 }

@@ -3,14 +3,16 @@ import React from 'react'
 import CustomAvatar from "../custom-avatar"
 import { Bars3Icon, EllipsisVerticalIcon, TrashIcon, Cog6ToothIcon } from '@heroicons/react/24/solid'
 
-const ListCardSmall = ({ groupPicture = "/img/bruce-mars.jpeg", name = "Babu Bhai", type = 'Personal', handleChangeRoom = () => { } }) => {
+const ListCardSmall = ({ previewImage = "/img/bruce-mars.jpeg", name = "Babu Bhai", type = 'Personal', handleChangeRoom = () => { } }) => {
     return (
-        <div onClick={handleChangeRoom} className='flex items-center w-auto my-2 ms-3 me-1 px-4 py-1 cursor-pointer bg-white rounded-md'>
-            <CustomAvatar sx={{ borderRadius: '10px' }} src={groupPicture} name={name} className={"shadow-lg shadow-blue-gray-500/25"} />
+        <div onClick={handleChangeRoom} className='flex items-center justify-between w-full my-2 ms-3 me-1 px-4 py-1 cursor-pointer bg-white rounded-md'>
 
-            <div className='mx-5'>
-                <Typography className='text-sm font-medium'>{name}</Typography>
-                <Typography style={{ fontSize: '10px' }} className='font-extralight'>{type} Chat</Typography>
+            <div className='flex'>
+                <CustomAvatar sx={{ borderRadius: '10px' }} src={previewImage} name={name} className={"shadow-lg shadow-blue-gray-500/25"} />
+                <div className='ms-4'>
+                    <Typography className='text-sm font-medium'>{name}</Typography>
+                    <Typography style={{ fontSize: '10px' }} className='font-extralight'>{type} Chat</Typography>
+                </div>
             </div>
 
             <div>

@@ -23,8 +23,9 @@ const Message = ({ message, timeStamps, sender, isCurrentUser = false }) => {
                 <Typography className='font-extralight text-right mt-1' style={{ fontSize: '8.5px' }}>{formatDateNew(messageDateTime)}</Typography>
             </div>
             {
-                isCurrentUser && <div className='mx-1'>
+                isCurrentUser && <div className='mx-1 flex flex-col itemms-center'>
                     <Avatar src={profilePicture} alt={fullName} size='sm' className='border-2 border-gray-300' />
+                    <Typography style={{fontSize:"10px"}} className='text-center'>You</Typography>
                 </div>
             }
         </div>

@@ -2,7 +2,7 @@ import {
     Button,
     Card, CardHeader, IconButton, Typography,
 } from "@material-tailwind/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client"
 import Message from "./message";
 import { isCurrentUser } from "@/utils/helpers";
@@ -11,7 +11,7 @@ import { Divider, Input, TextField } from "@mui/material";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import SplashChat from "./splash-chat";
 
-const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama', handleBack = () => {} }) => {
+const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama', handleBack = () => {}, receiverImg = '' }) => {
     // TODO: make this dynamic
     const [socketInstance, setSocket] = useState(null);
     const [allMessages, setAllMessages] = useState([]);
@@ -52,7 +52,17 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
     const handleSendMessage = () => {
         if (!socketInstance) return;
         socketInstance.emit("send message", { message: inputValue, sender: sender_id, chat_room_id: room_id })
+        setInputValue('')
     }
+
+    const messagesContainerRef = useRef(null);
+
+    useEffect(() => {
+        // Scroll to the bottom when the component updates
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
+    }, [allMessages]);
 
     return (
         <div className="w-full flex flex-col">
@@ -68,12 +78,12 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
                                     className="h-6 w-6"
                                 />
                             </IconButton>
-                            <CustomAvatar sx={{ borderRadius: '20px' }} src={""} name={receiverName} className={"mx-2"} />
+                            <CustomAvatar sx={{ borderRadius: '20px' }} src={receiverImg} name={receiverName} className={"mx-4"} />
                             <Typography className="text-3xl">{receiverName}</Typography>
                         </div>
                         <Divider />
                         <div className="">
-                            <div style={{ maxHeight: '67vh' }} className="p-5 overflow-y-scroll">
+                            <div style={{ maxHeight: '67vh', minHeight: '67vh' }} className="p-5 overflow-y-scroll" ref={messagesContainerRef}>
                                 {
                                     !!allMessages.length &&
                                     allMessages.map(({ message, sender, createdAt, updatedAt }, i) => (
@@ -83,9 +93,10 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
                             </div>
 
                             <div className="px-2 py-2 bg-blue-gray-50">
-                                <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}>
+                                <form onSubmit={(e) => { e.preventDefault(); handleSendMessage();}}>
                                     <TextField
                                         fullWidth
+                                        value={inputValue}
                                         size="medium"
                                         variant="outlined"
                                         placeholder="Type a message"
