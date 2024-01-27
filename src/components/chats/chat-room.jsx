@@ -1,22 +1,23 @@
-import {
-    Button,
-    Card, CardHeader, IconButton, Typography,
-} from "@material-tailwind/react";
+import {IconButton, Menu, MenuHandler, MenuItem, MenuList, Typography} from "@material-tailwind/react";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client"
 import Message from "./message";
 import { isCurrentUser } from "@/utils/helpers";
 import CustomAvatar from "../custom-avatar"
-import { Divider, Input, TextField } from "@mui/material";
+import { Divider, TextField } from "@mui/material";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import SplashChat from "./splash-chat";
 import {ChevronDownIcon, ChevronDoubleDownIcon} from "@heroicons/react/24/solid";
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 
 const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama', handleBack = () => {}, receiverImg = '', handleDeleteMessage = () => {} }) => {
     // TODO: make this dynamic
     const [socketInstance, setSocket] = useState(null);
     const [allMessages, setAllMessages] = useState([]);
     const [inputValue, setInputValue] = useState("");
+    const inputRef = useRef(null);
 
 
     useEffect(() => {
@@ -77,6 +78,19 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
         }
     }
 
+    const handleAddEmoji = (e) => {
+        let sym = e.unified.split("-");
+        let codesArray = [];
+        sym.forEach((el) => codesArray.push("0x" + el));
+        let emoji = String.fromCodePoint(...codesArray);
+        setInputValue((prevValue) => prevValue + emoji)
+        if (inputRef.current) {
+            setTimeout(() => {
+                inputRef.current.focus();
+            }, 100);
+        }
+    }
+
     return (
         <div className="w-full flex flex-col">
             <div className="border-2" style={{ minWidth: '50vw' }}>
@@ -104,11 +118,25 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
                                     ))
                                 }
                             </div>
-
-                            <div className="px-2 py-2 bg-blue-gray-50">
+                            <div className="px-2 py-2 bg-blue-gray-50 flex">
+                                <Menu dismiss={{itemPress: false}} className='w-fit' placement='top'>
+                                    <MenuHandler>
+                                        <button className='me-2'>
+                                            <SentimentVerySatisfiedIcon style={{fontSize:'30px'}} className="h-5 w-5" />
+                                        </button>
+                                    </MenuHandler>
+                                    <MenuList className="w-fit border-0 p-0 m-0">
+                                        <MenuItem className="flex items-center w-fit">
+                                            <Picker theme="dark" data={data} onEmojiSelect={handleAddEmoji} />
+                                        </MenuItem>
+                                    </MenuList>
+                                </Menu>
+                                <div className='w-full'>
                                 <form onSubmit={(e) => { e.preventDefault(); handleSendMessage();}}>
                                     <TextField
                                         fullWidth
+                                        inputRef={inputRef} 
+                                        name='chatMessage'
                                         value={inputValue}
                                         size="medium"
                                         variant="outlined"
@@ -119,6 +147,7 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
                                         onChange={handleChange}
                                     />
                                 </form>
+                                </div>
                             </div>
                         </div>
                     </div>

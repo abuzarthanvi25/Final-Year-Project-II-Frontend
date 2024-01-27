@@ -6,4 +6,7 @@ export default defineConfig({
   resolve: {
     alias: [{ find: "@", replacement: "/src" }],
   },
+  optimizeDeps: {
+    exclude: ['@emoji-mart/react']
+  }
 });
