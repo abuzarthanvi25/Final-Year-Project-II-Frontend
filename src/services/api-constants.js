@@ -19,7 +19,9 @@ const CONSTANT = {
     summarizeNote: '/summarize-note',
     imageToNote: '/image-to-note',
     createChatRoom: '/create-chat-room',
-    getChatRooms: '/get-chat-rooms'
+    getChatRooms: '/get-chat-rooms',
+    deleteChatRoom: '/delete-chat-room',
+    deleteMessage: '/delete-message',
   }
   
   export default CONSTANT

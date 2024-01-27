@@ -19,6 +19,18 @@ export const createChatRequest = createAsyncThunk('ChatReducer/createChatRequest
   return response
 })
 
+export const deleteChatRequest = createAsyncThunk('ChatReducer/deleteChatRequest', async (payload, thunkApi) => {
+  const response = await ChatApiServices.deleteChat(payload, thunkApi)
+
+  return response
+})
+
+export const deleteMessageRequest = createAsyncThunk('ChatReducer/deleteMessageRequest', async (payload, thunkApi) => {
+  const response = await ChatApiServices.deleteMessage(payload, thunkApi)
+
+  return response
+})
+
 export const getChatsRequest = createAsyncThunk('ChatReducer/getChatsRequest', async (payload, thunkApi) => {
   const response = await ChatApiServices.getAllChats(payload, thunkApi)
 

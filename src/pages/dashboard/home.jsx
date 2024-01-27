@@ -26,8 +26,48 @@ import {
   ordersOverviewData,
 } from "@/data";
 import { CheckCircleIcon, ClockIcon } from "@heroicons/react/24/solid";
+import { showFaliureToast } from '@/utils/toast-helpers';
+import { getProfileDetailsRequest } from '@/store/reducers/user-reducer';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { get } from 'lodash';
 
 export function Home() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { userDetails } = useSelector((state) => state.auth)
+  const token = get(userDetails, 'token', null);
+
+  const handleLogout = () => {
+    try {
+      dispatch(logoutUserRequest()).then(() => navigate("/sign-in"));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleGetProfile = () => {
+    try {
+      if (token) {
+        dispatch(getProfileDetailsRequest({ token }))
+          .then(unwrapResult)
+          .catch(err => {
+            showFaliureToast(err?.response?.data?.message)
+            if (err?.response?.data?.message === 'User not found') {
+              handleLogout();
+            }
+          })
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    handleGetProfile()
+  }, [])
+
   return (
     <div className="mt-12">
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">

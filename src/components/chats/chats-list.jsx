@@ -1,10 +1,11 @@
 import { Button, Typography } from '@material-tailwind/react'
 import React from 'react'
 import GroupChatCardSmall from './group-chat-sm'
+import ChatSkeleton from './chat-skeleton'
 import "./chat-list.css"
 import { SquaresPlusIcon } from '@heroicons/react/24/solid'
 
-const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { } }) => {
+const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { }, handleDeleteChatRoom = () => {}, loading = false }) => {
 
   const handleGetReceiver = (members) => {
     if(!members || !Array.isArray(members) || !currentUser) return "";
@@ -54,14 +55,16 @@ const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { } }) =>
         <div className='py-2'>
           <Typography className='font-medium text-center' variant='h6'>Chats</Typography>
         </div>
-        <div style={{ maxHeight: '70vh' }} className='overflow-y-auto w-full h-full flex items-start justify-center'>
+        <div style={{ maxHeight: '70vh' }} className='overflow-y-auto overflow-x-hidden w-full h-full flex items-start flex-col justify-center'>
           {
+            loading ? ([1,2,3,4,5,6].map((item) => (<ChatSkeleton key={item}/>))) :
             !!chats.length ?
             chats.map(({ type, name, _id, members, image }, i) => (
-              <GroupChatCardSmall handleChangeRoom={() => handleChangeRoom(_id)} key={i} previewImage={handlePicture(type, image, members)} name={handleName(type, name, members)} type={type} />
+              <GroupChatCardSmall loading={loading} handleDeleteChatRoom={() => handleDeleteChatRoom(_id)} handleChangeRoom={() => handleChangeRoom(_id)} key={i} previewImage={handlePicture(type, image, members)} name={handleName(type, name, members)} type={type} />
             )) :
             <div className='w-full h-full flex justify-center items-center'><Typography className='text-sm'>No Chats Found</Typography></div>
           }
+          
         </div>
       </div>
 

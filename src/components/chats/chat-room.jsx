@@ -10,12 +10,14 @@ import CustomAvatar from "../custom-avatar"
 import { Divider, Input, TextField } from "@mui/material";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import SplashChat from "./splash-chat";
+import {ChevronDownIcon, ChevronDoubleDownIcon} from "@heroicons/react/24/solid";
 
-const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama', handleBack = () => {}, receiverImg = '' }) => {
+const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama', handleBack = () => {}, receiverImg = '', handleDeleteMessage = () => {} }) => {
     // TODO: make this dynamic
     const [socketInstance, setSocket] = useState(null);
     const [allMessages, setAllMessages] = useState([]);
     const [inputValue, setInputValue] = useState("");
+
 
     useEffect(() => {
         const socket = io("http://localhost:5001/");
@@ -49,6 +51,11 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
         setInputValue(e.target?.value);
     }
 
+    const handleUpdateMessages = () =>  {
+        if (!socketInstance) return;
+        socketInstance.emit("get room messages", room_id)
+    };
+
     const handleSendMessage = () => {
         if (!socketInstance) return;
         socketInstance.emit("send message", { message: inputValue, sender: sender_id, chat_room_id: room_id })
@@ -64,6 +71,12 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
         }
     }, [allMessages]);
 
+    const handleScrollEnd = () => {
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
+    }
+
     return (
         <div className="w-full flex flex-col">
             <div className="border-2" style={{ minWidth: '50vw' }}>
@@ -78,7 +91,7 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
                                     className="h-6 w-6"
                                 />
                             </IconButton>
-                            <CustomAvatar sx={{ borderRadius: '20px' }} src={receiverImg} name={receiverName} className={"mx-4"} />
+                            <CustomAvatar sx={{ borderRadius: '20px', cursor: 'pointer' }} src={receiverImg} name={receiverName} className={"mx-4"} />
                             <Typography className="text-3xl">{receiverName}</Typography>
                         </div>
                         <Divider />
@@ -86,8 +99,8 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
                             <div style={{ maxHeight: '67vh', minHeight: '67vh' }} className="p-5 overflow-y-scroll" ref={messagesContainerRef}>
                                 {
                                     !!allMessages.length &&
-                                    allMessages.map(({ message, sender, createdAt, updatedAt }, i) => (
-                                        <Message isCurrentUser={isCurrentUser(sender?._id, sender_id)} timeStamps={{ createdAt, updatedAt }} key={i} message={message} sender={sender} />
+                                    allMessages.map(({ message, sender, createdAt, updatedAt, _id }, i) => (
+                                        <Message handleDeleteMessage={() => handleDeleteMessage(_id, handleUpdateMessages)} isCurrentUser={isCurrentUser(sender?._id, sender_id)} timeStamps={{ createdAt, updatedAt }} key={i} message={message} sender={sender} />
                                     ))
                                 }
                             </div>

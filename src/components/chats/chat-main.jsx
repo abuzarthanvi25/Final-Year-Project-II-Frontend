@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ChatsList from './chats-list'
 import ChatHome from './chat-home'
-import { getChatsRequest } from '@/store/reducers/chat-reducer'
+import { deleteChatRequest, deleteMessageRequest, getChatsRequest } from '@/store/reducers/chat-reducer'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { showFaliureToast } from '@/utils/toast-helpers'
 import { useDispatch, useSelector } from 'react-redux'
@@ -81,11 +81,51 @@ const ChatMain = () => {
     }
   }
 
+  const handleDeleteChatRoom = (chat_room_id) => {
+    try {
+      if (!token || !chat_room_id) return;
+
+      setLoading(true)
+      dispatch(deleteChatRequest({ token, chat_room_id }))
+        .then(unwrapResult)
+        .then(() => {
+          handleBack();
+          handleGetChats();
+          setLoading(false);
+        })
+        .catch((err) => {
+          showFaliureToast(err?.response?.data?.message)
+          setLoading(false)
+        })
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleDeleteMessage = (message_id, cb) => {
+    try {
+      if (!token || !message_id) return;
+
+      dispatch(deleteMessageRequest({ token, message_id }))
+        .then(unwrapResult)
+        .then(() => {
+          if(typeof cb == 'function') cb();
+        })
+        .catch((err) => {
+          showFaliureToast(err?.response?.data?.message)
+        })
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   return (
     <div className='flex bg-white rounded-xl'>
-      <ChatsList handleChangeRoom={handleChangeRoom} currentUser={userId} chats={chatsLocal ?? []}/>
-      <ChatHome chatDetails={chatDetails} sender_id={userId} handleBack={handleBack} room_id={currentRoom} />
+      <ChatsList loading={loading} handleDeleteChatRoom={handleDeleteChatRoom} handleChangeRoom={handleChangeRoom} currentUser={userId} chats={chatsLocal ?? []}/>
+      <ChatHome handleDeleteMessage={handleDeleteMessage} chatDetails={chatDetails} sender_id={userId} handleBack={handleBack} room_id={currentRoom} />
     </div>
   )
 }
