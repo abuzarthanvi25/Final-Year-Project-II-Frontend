@@ -60,3 +60,9 @@ export const objectToFormData = (obj) => {
 
   return formData;
 };
+
+export const isCurrentUser = (senderId, currentUserId) => {
+  if(!senderId || !currentUserId) return false;
+
+  return senderId == currentUserId
+}

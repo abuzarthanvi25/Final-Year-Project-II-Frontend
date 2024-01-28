@@ -1,0 +1,7 @@
+.del-btn {
+    visibility: hidden;
+}
+
+.message:hover .del-btn {
+    visibility: visible;
+}
