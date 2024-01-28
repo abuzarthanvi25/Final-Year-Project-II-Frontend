@@ -5,7 +5,7 @@ import ChatSkeleton from './chat-skeleton'
 import "./chat-list.css"
 import { SquaresPlusIcon } from '@heroicons/react/24/solid'
 
-const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { }, handleDeleteChatRoom = () => {}, loading = false }) => {
+const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { }, handleDeleteChatRoom = () => {}, loading = false, handleOpen = () => {} }) => {
 
   const handleGetReceiver = (members) => {
     if(!members || !Array.isArray(members) || !currentUser) return "";
@@ -43,7 +43,7 @@ const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { }, hand
     <div className='w-full px-0 py-3 flex flex-col items-center'>
       <div className='my-2'>
         <div className='w-48'>
-          <Button variant='gradient' fullWidth size='md'>
+          <Button onClick={handleOpen} variant='gradient' fullWidth size='md'>
             <div className='flex items-center justify-evenly'>
               <SquaresPlusIcon className="h-5 w-5" />
               <Typography className='text-md font-semibold'>New Chat</Typography>
@@ -60,7 +60,7 @@ const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { }, hand
             loading ? ([1,2,3,4,5,6].map((item) => (<ChatSkeleton key={item}/>))) :
             !!chats.length ?
             chats.map(({ type, name, _id, members, image }, i) => (
-              <GroupChatCardSmall loading={loading} handleDeleteChatRoom={() => handleDeleteChatRoom(_id)} handleChangeRoom={() => handleChangeRoom(_id)} key={i} previewImage={handlePicture(type, image, members)} name={handleName(type, name, members)} type={type} />
+              <GroupChatCardSmall members={members} loading={loading} handleDeleteChatRoom={() => handleDeleteChatRoom(_id)} handleChangeRoom={() => handleChangeRoom(_id)} key={i} previewImage={handlePicture(type, image, members)} name={handleName(type, name, members)} type={type} />
             )) :
             <div className='w-full h-full flex justify-center items-center'><Typography className='text-sm'>No Chats Found</Typography></div>
           }

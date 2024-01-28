@@ -1,5 +1,5 @@
 import CustomModal from '@/components/modals';
-import { addCourseInitialValues, addCourseValidationSchema, addGroupCourseInitialValues, addGroupCourseValidationSchema } from '@/utils/validations/course-validations';
+import { addGroupCourseInitialValues, addGroupCourseValidationSchema } from '@/utils/validations/course-validations';
 import { Button, Chip, Typography } from '@material-tailwind/react';
 import { CircularProgress, TextField } from '@mui/material'
 import { useFormik } from 'formik';
@@ -126,7 +126,7 @@ const AddCourse = ({ loading = false, handleAddCourse = () => { }, previousData 
                         </div>
                         <div className='flex flex-wrap'>
                         {
-                            formik.values?.members?.map((id) => (<Chip variant='ghost' className='w-fit my-1 mx-1' value={handleGetMemberName(id)} />))
+                            formik.values?.members?.map((id) => (<Chip key={id} variant='ghost' className='w-fit my-1 mx-1' value={handleGetMemberName(id)} />))
                         }
                         </div>
                     </div>

@@ -18,7 +18,7 @@ export function MessageCard({ profile_picture, full_name = '', bio = '', action 
           </Typography>
           <Tooltip placement="top-start" content={<div className="w-80">{bio}</div>}>
             <Typography className="text-xs font-normal text-blue-gray-400">
-              {truncateString(bio, 90)}
+              {truncateString(bio, 55)}
             </Typography>
           </Tooltip>
         </div>

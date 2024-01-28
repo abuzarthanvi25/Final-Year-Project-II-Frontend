@@ -1,9 +1,9 @@
 import { IconButton, Menu, MenuHandler, MenuItem, MenuList, Typography } from '@material-tailwind/react'
 import React from 'react'
 import CustomAvatar from "../custom-avatar"
-import { Bars3Icon, EllipsisVerticalIcon, TrashIcon, Cog6ToothIcon } from '@heroicons/react/24/solid'
+import { EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/24/solid'
 
-const ListCardSmall = ({ loading=false, previewImage = "/img/bruce-mars.jpeg", name = "Babu Bhai", type = 'Personal', handleChangeRoom = () => { }, handleDeleteChatRoom = () => {} }) => {
+const ListCardSmall = ({ loading=false, previewImage = "", name = "Babu Bhai", type = 'Personal', handleChangeRoom = () => { }, handleDeleteChatRoom = () => {} }) => {
     return (
         <div style={{pointerEvents: loading ? 'none' : 'all'}} className='flex items-center justify-between w-full my-2 ms-3 me-1 px-4 py-1 cursor-pointer bg-white rounded-md'>
 

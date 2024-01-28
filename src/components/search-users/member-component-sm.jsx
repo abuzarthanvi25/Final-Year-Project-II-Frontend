@@ -22,7 +22,7 @@ const MemberComponentSmall = ({email = '', full_name = '', profile_picture = '',
         </div>
       </div>
       {
-        <Button onClick={handleAddMember} disabled={loading} className='w-4/12' variant="filled" size="sm">
+        <Button onClick={handleAddMember} disabled={loading} className={`w-4/12 ${isAlreadyAdded ? 'bg-teal-700' : ''}`} variant="filled" size="sm">
         {loading ? <CircularProgress className='text-xs' style={{color:'#fff', width:'14px', height:'14px'}}/> : isAlreadyAdded ? "Remove Member" : "Add Member"}
         </Button>
       }

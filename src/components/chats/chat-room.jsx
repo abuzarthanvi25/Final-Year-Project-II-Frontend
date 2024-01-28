@@ -1,4 +1,4 @@
-import {IconButton, Menu, MenuHandler, MenuItem, MenuList, Typography} from "@material-tailwind/react";
+import {Avatar, IconButton, Menu, MenuHandler, MenuItem, MenuList, Tooltip, Typography} from "@material-tailwind/react";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client"
 import Message from "./message";
@@ -119,7 +119,7 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
                                 }
                             </div>
                             <div className="px-2 py-2 bg-blue-gray-50 flex">
-                                <Menu dismiss={{itemPress: false}} className='w-fit' placement='top'>
+                                <Menu dismiss={{itemPress: false, isRequired:false}} className='w-fit' placement='top'>
                                     <MenuHandler>
                                         <button className='me-2'>
                                             <SentimentVerySatisfiedIcon style={{fontSize:'30px'}} className="h-5 w-5" />

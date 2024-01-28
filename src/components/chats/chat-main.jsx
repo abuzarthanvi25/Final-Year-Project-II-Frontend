@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import ChatsList from './chats-list'
 import ChatHome from './chat-home'
-import { deleteChatRequest, deleteMessageRequest, getChatsRequest } from '@/store/reducers/chat-reducer'
+import { createChatRequest, deleteChatRequest, deleteMessageRequest, getChatsRequest } from '@/store/reducers/chat-reducer'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { showFaliureToast } from '@/utils/toast-helpers'
 import { useDispatch, useSelector } from 'react-redux'
 import { get } from 'lodash'
+import CustomModal from '../modals'
+import AddChat from './add-chat'
 
 const ChatMain = () => {
   const [loading, setLoading] = useState(false);
   const [chatsLocal, setChatsLocal] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
   const [chatDetails, setChatDetails] = useState({name: '', picture: ''});
+  const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
   const { userDetails } = useSelector((state) => state.auth);
   const { allChatRooms } = useSelector((state) => state.chats);
+  const { profileDetails } = useSelector((state) => state.user)
+
+  const friends = get(profileDetails, 'friends', [])
 
   const token = get(userDetails, "token", null);
   const userId = get(userDetails, "user._id", null);
@@ -121,10 +127,38 @@ const ChatMain = () => {
     }
   }
 
+  const handleAddChat = (body) => {
+    try {
+      if (!token || !body) return;
+      setLoading(true)
+      dispatch(createChatRequest({ token, body }))
+        .then(unwrapResult)
+        .then((res) => {
+          handleGetChats();
+          setLoading(false)
+          setTimeout(() => handleChangeRoom(res?.data?.data?._id), 500);
+        })
+        .catch((err) => {
+          handleChangeRoom(err?.response?.data?.data?._id)
+          setLoading(false)
+        })
+        .finally(() => handleClose());
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
 
   return (
     <div className='flex bg-white rounded-xl'>
-      <ChatsList loading={loading} handleDeleteChatRoom={handleDeleteChatRoom} handleChangeRoom={handleChangeRoom} currentUser={userId} chats={chatsLocal ?? []}/>
+      <CustomModal open={open} onClose={handleClose}>
+        <AddChat handleAddChat={handleAddChat} friends={friends}/>
+      </CustomModal>
+      <ChatsList handleOpen={handleOpen} loading={loading} handleDeleteChatRoom={handleDeleteChatRoom} handleChangeRoom={handleChangeRoom} currentUser={userId} chats={chatsLocal ?? []}/>
       <ChatHome handleDeleteMessage={handleDeleteMessage} chatDetails={chatDetails} sender_id={userId} handleBack={handleBack} room_id={currentRoom} />
     </div>
   )
