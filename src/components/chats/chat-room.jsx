@@ -142,6 +142,7 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
                                 <div className='w-full'>
                                 <form onSubmit={(e) => { e.preventDefault(); handleSendMessage();}}>
                                     <CustomTextField
+                                        autoComplete='off'
                                         fullWidth
                                         inputRef={inputRef} 
                                         name='chatMessage'
