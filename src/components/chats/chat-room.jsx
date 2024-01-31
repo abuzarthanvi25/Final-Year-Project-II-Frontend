@@ -4,13 +4,21 @@ import { io } from "socket.io-client"
 import Message from "./message";
 import { isCurrentUser } from "@/utils/helpers";
 import CustomAvatar from "../custom-avatar"
-import { Divider, TextField } from "@mui/material";
+import { Divider, TextField, styled } from "@mui/material";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import SplashChat from "./splash-chat";
 import {ChevronDownIcon, ChevronDoubleDownIcon} from "@heroicons/react/24/solid";
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+
+const CustomTextField = styled(TextField)({
+    '& .MuiOutlinedInput-root': {
+      '&.Mui-focused fieldset': {
+        borderColor: 'black',
+      },
+    },
+  });
 
 const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama', handleBack = () => {}, receiverImg = '', handleDeleteMessage = () => {} }) => {
     // TODO: make this dynamic
@@ -133,7 +141,8 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
                                 </Menu>
                                 <div className='w-full'>
                                 <form onSubmit={(e) => { e.preventDefault(); handleSendMessage();}}>
-                                    <TextField
+                                    <CustomTextField
+                                        autoComplete='off'
                                         fullWidth
                                         inputRef={inputRef} 
                                         name='chatMessage'
