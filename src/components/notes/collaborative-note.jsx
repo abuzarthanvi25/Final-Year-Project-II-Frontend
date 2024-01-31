@@ -21,7 +21,7 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
   const [open, setOpen] = useState(false);
   const [socket, setSocket] = useState(null);
   const [cursorInstance, setCursorInstance] = useState(null)
-  const {id: note_id} = useParams()
+  const { id: note_id } = useParams()
 
   const quillRef = useRef();
 
@@ -40,21 +40,21 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
 
   const handleSynchronizeChanges = (socket) => {
     if (socket == null) return;
-  
-      const handler = synchronizedData => {
-          setValue(synchronizedData)
-      }
-      socket.on("receive-note-changes", handler)
+
+    const handler = synchronizedData => {
+      setValue(synchronizedData)
+    }
+    socket.on("receive-note-changes", handler)
   }
 
   const handleGetInitialData = (socket) => {
     if (socket == null) return;
 
-    socket.once("load-note-content", ({data, title}) => {
+    socket.once("load-note-content", ({ data, title }) => {
       setValue(data)
       setTitle(title)
       handleGetText()
-  })
+    })
 
     socket.emit("get-note-content", note_id);
   }
@@ -69,8 +69,8 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
   }, [])
 
   const handleCursorChange = () => {
-    if(handleGetCursorPostion()){
-      socket.emit("send-cursor-position", {user: currentUser?._id, cursor: handleGetCursorPostion()});
+    if (handleGetCursorPostion()) {
+      socket.emit("send-cursor-position", { user: currentUser?._id, cursor: handleGetCursorPostion() });
     }
   };
 
@@ -79,8 +79,8 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
       const quillInstance = quillRef.current.getEditor();
 
       const cursorPosition = quillInstance.getSelection();
-      
-      if(cursorPosition) return cursorPosition
+
+      if (cursorPosition) return cursorPosition
 
       return null
     }
@@ -91,9 +91,9 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
       const quillInstance = quillRef.current.getEditor();
       const cursorsModule = new Cursors(quillInstance, { autoRegisterListener: true });
       const cursorsNotInitialized = cursorsModule.cursors()?.length == 0
-      if(currentUser && cursorsModule && members.length && cursorsNotInitialized){
+      if (currentUser && cursorsModule && members.length && cursorsNotInitialized) {
         setCursorInstance(cursorsModule)
-        members.map(({full_name, _id}) => {
+        members.map(({ full_name, _id }) => {
           cursorsModule.createCursor(_id, full_name, getRandomColor());
         })
       }
@@ -101,7 +101,7 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
   }, [quillRef.current])
 
   useEffect(() => {
-    if(!socket) return
+    if (!socket) return
     const cursorHandler = ({ user, cursor }) => {
       if (cursorInstance && cursor && user) {
         if (user !== currentUser?._id) {
@@ -136,21 +136,36 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
 
   const handleOnClose = () => setOpen(false)
 
+  const handleSendChanges = (value) => {
+    if (!socket) return
+    socket.emit("send-note-changes", value);
+  }
+
+  const syncImgEmmbed = (val) => {
+    try {
+      handleSendChanges(val)
+      if (socket) {
+        handleCursorChange()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div style={{ pointerEvents: loading ? 'none' : 'all' }} className='container'>
       <div >
         <CustomModal open={open} onClose={handleOnClose}>
-          <ImageUpload handleCloseModal={handleOnClose} handleImageUpload={(file) => handleImageToNote(value, setValue, file)} />
+          <ImageUpload handleCloseModal={handleOnClose} handleImageUpload={(file) => handleImageToNote(value, setValue, file, syncImgEmmbed)} />
         </CustomModal>
         <form className='my-2 flex justify-between' onSubmit={(e) => {
           e.preventDefault();
           handleSave({ data: value, title: title })
-          if(!socket) return
-          socket.emit("send-note-changes", value);
+          handleSendChanges(value)
         }}>
           <div className='flex items-center'>
             <Typography className='text-2xl me-3'>Title:</Typography>
-            <Input disabled={loading} placeholder='Untitled' style={{padding: 0, textAlign:'left', minWidth:'40ch', paddingLeft:'10px'}} onChange={(e) => setTitle(e.target.value)} required defaultValue={title} variant='outlined' />
+            <Input disabled={loading} placeholder='Untitled' style={{ padding: 0, textAlign: 'left', minWidth: '40ch', paddingLeft: '10px' }} onChange={(e) => setTitle(e.target.value)} required defaultValue={title} variant='outlined' />
           </div>
           <Button style={{ minWidth: '120px' }} disabled={loading} type='submit'>
             {
@@ -160,39 +175,39 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
           </Button>
         </form>
       </div>
-      <div style={{pointerEvents: loading ? 'none' : 'all'}} className='mb-2'>
-      <Menu animate={{mount: { y: 0 },unmount: { y: 25 }}} placement='bottom-start'>
-            <div className='flex items-center'>
+      <div style={{ pointerEvents: loading ? 'none' : 'all' }} className='mb-2'>
+        <Menu animate={{ mount: { y: 0 }, unmount: { y: 25 } }} placement='bottom-start'>
+          <div className='flex items-center'>
             <MenuHandler className='flex items-center bg-teal-800 p-2 rounded-md cursor-pointer'>
               <div>
-              <PsychologyIcon className="h-5 w-5 me-2 text-white" />
-              <Typography className='text-white'>AI Accelerated Notes</Typography>
+                <PsychologyIcon className="h-5 w-5 me-2 text-white" />
+                <Typography className='text-white'>AI Accelerated Notes</Typography>
               </div>
             </MenuHandler>
-            </div>
-            <MenuList className="w-max border-0">
-              {
-                !previousData?.is_summarized && previousData &&
-              <MenuItem onClick={() => handleSummarize({data:text, title})} className="flex items-center gap-3 text-center">
+          </div>
+          <MenuList className="w-max border-0">
+            {
+              !previousData?.is_summarized && previousData &&
+              <MenuItem onClick={() => handleSummarize({ data: text, title })} className="flex items-center gap-3 text-center">
                 <div className='flex items-center'>
-                <ChatBubbleBottomCenterTextIcon className="h-5 w-5 me-2 text-blue-gray-500" />
+                  <ChatBubbleBottomCenterTextIcon className="h-5 w-5 me-2 text-blue-gray-500" />
                   <Typography className='text-sm font-semibold'>Summarize Notes</Typography>
                 </div>
               </MenuItem>
-              }
-              <MenuItem onClick={() => setOpen(true)} className="flex items-center gap-3 text-center">
-                <div className='flex items-center'  >
+            }
+            <MenuItem onClick={() => setOpen(true)} className="flex items-center gap-3 text-center">
+              <div className='flex items-center'  >
                 <PhotoIcon className="h-5 w-5 me-2 text-blue-gray-500" />
-                  <Typography className='text-sm font-semibold'>Embbed text from image</Typography>
-                </div>
-              </MenuItem>
-            </MenuList>
-          </Menu>
+                <Typography className='text-sm font-semibold'>Embbed text from image</Typography>
+              </div>
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </div>
       {
-        loading ? 
-        <NoteSkeleton/> :
-      <ReactQuill ref={quillRef} modules={modules} theme="snow" value={value} onChange={handleOnChange} />
+        loading ?
+          <NoteSkeleton /> :
+          <ReactQuill ref={quillRef} modules={modules} theme="snow" value={value} onChange={handleOnChange} />
       }
     </div>
   )

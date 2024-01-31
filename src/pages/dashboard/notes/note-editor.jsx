@@ -79,7 +79,7 @@ const NoteEditor = ({ courseType, currentUser = null }) => {
 
   }
 
-  const handleSummarizeNote = (updatedContent) => {
+  const handleSummarizeNote = (updatedContent, cb) => {
     const body = {
       data: JSON.stringify(updatedContent?.data),
       note_id,
@@ -101,7 +101,7 @@ const NoteEditor = ({ courseType, currentUser = null }) => {
 
   }
 
-  const handleImageToNote = (editorValue, setEditorValue, image) => {
+  const handleImageToNote = (editorValue, setEditorValue, image, cb) => {
     try {
       if (!image) return;
 
@@ -116,6 +116,9 @@ const NoteEditor = ({ courseType, currentUser = null }) => {
           setLoading(false)
           if (typeof response?.data?.data == 'string') {
             setEditorValue(editorValue + JSON.parse(response?.data?.data))
+            if(typeof cb == 'function'){
+              cb(editorValue + JSON.parse(response?.data?.data))
+            }
           }
         })
         .catch((err) => {
