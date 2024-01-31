@@ -6,18 +6,29 @@ import { get } from 'lodash';
 import { getNoteDetailsRequest, summarizeNoteRequest, updateNoteRequest, imageToNoteRequest } from '@/store/reducers/note-reducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { showFaliureToast } from '@/utils/toast-helpers';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-const NoteEditor = ({ courseType }) => {
+const NoteEditor = ({ courseType, currentUser = null }) => {
   const { state } = useLocation();
   const { id: note_id } = useParams();
   const dispatch = useDispatch();
+  const { courses } = useSelector((state) => state.courses)
 
   const [loading, setLoading] = useState(false)
   const [currentNoteDetails, setCurrentNoteDetails] = useState(null)
 
   const course_id = get(state, 'course_id', null);
   const token = get(state, 'token', null);
+
+  const handleGetMembers = () => {
+    if(courses?.length == 0 || !course_id) return
+
+    const currentCourse = courses.find((course) => course?._id == course_id)
+
+    if(currentCourse) return currentCourse?.members
+
+    return null
+  }
 
   const handleGetNoteDetails = () => {
     try {
@@ -123,7 +134,7 @@ const NoteEditor = ({ courseType }) => {
         courseType == 'Personal' ?
           <Note handleImageToNote={handleImageToNote} loading={loading} handleSummarize={handleSummarizeNote} handleSave={handleEditNote} previousData={currentNoteDetails} />
           :
-          <CollaborativeNote handleImageToNote={handleImageToNote} loading={loading} handleSummarize={handleSummarizeNote} handleSave={handleEditNote} previousData={currentNoteDetails} />
+          <CollaborativeNote members={handleGetMembers()} currentUser={currentUser} handleImageToNote={handleImageToNote} loading={loading} handleSummarize={handleSummarizeNote} handleSave={handleEditNote} previousData={currentNoteDetails} />
       }
     </div>
   )

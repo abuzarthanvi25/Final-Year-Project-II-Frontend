@@ -31,14 +31,14 @@ import { logoutUserRequest } from '../../store/reducers/auth-reducer'
 import { InputAdornment, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CustomModal from '@/components/modals';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SearchUsers from '@/components/search-users';
 import { addFriendRequest, getProfileDetailsRequest, searchUsersRequeast } from '@/store/reducers/user-reducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import { showSuccessToast } from '@/utils/toast-helpers';
 
-export function DashboardNavbar() {
+export function DashboardNavbar({setCurrentUser}) {
   const [controller, dispatch] = useMaterialTailwindController();
   const textFieldStyles = {
     '& label.Mui-focused': {
@@ -72,9 +72,16 @@ export function DashboardNavbar() {
   const [loading, setLoading] = useState(false);
 
   const token = get(userDetails, "token", null);
+  const currentUser = get(userDetails, "user", null);
   const currentFriends = get(profileDetails, "friends", []);
   const fullName = get(profileDetails, "full_name", '');
   const profile_picture = get(profileDetails, "profile_picture.url", '');
+
+  useEffect(() => {
+    if(currentUser){
+      setCurrentUser(currentUser)
+    }
+  }, [currentUser])
 
   const handleGetProfile = () => {
     try {

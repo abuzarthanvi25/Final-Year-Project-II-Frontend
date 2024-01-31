@@ -11,13 +11,16 @@ import CustomModal from '../modals';
 import ImageUpload from './image-upload';
 import { io } from "socket.io-client"
 import { useParams } from 'react-router-dom';
+import Cursors from 'quill-cursors';
+import { getRandomColor } from '@/utils/helpers';
 
-const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageToNote }) => {
+const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageToNote, currentUser, members = [] }) => {
   const [value, setValue] = useState('');
   const [title, setTitle] = useState('');
   const [text, setContentText] = useState('');
   const [open, setOpen] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [cursorInstance, setCursorInstance] = useState(null)
   const {id: note_id} = useParams()
 
   const quillRef = useRef();
@@ -31,48 +34,84 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
 
   const handleOnChange = (content, _, source, editor) => {
     if (socket == null || source !== "user") return;
+    handleCursorChange();
     socket.emit("send-note-changes", content);
+  }
+
+  const handleSynchronizeChanges = (socket) => {
+    if (socket == null) return;
+  
+      const handler = synchronizedData => {
+          setValue(synchronizedData)
+      }
+      socket.on("receive-note-changes", handler)
+  }
+
+  const handleGetInitialData = (socket) => {
+    if (socket == null) return;
+
+    socket.once("load-note-content", ({data, title}) => {
+      setValue(data)
+      setTitle(title)
+      handleGetText()
+  })
+
+    socket.emit("get-note-content", note_id);
   }
 
   useEffect(() => {
     const socket = io("http://localhost:5001/");
 
+    handleGetInitialData(socket)
+    handleSynchronizeChanges(socket)
+
     setSocket(socket)
   }, [])
 
-  useEffect(() => {
-    if (socket == null) return;
-
-    socket.once("load-note-content", ({data, title}) => {
-        setValue(data)
-        setTitle(title)
-        handleGetText()
-    })
-
-    socket.emit("get-note-content", note_id);
-}, [socket])
-
-// useEffect(() => {
-//     if (socket == null) return
-
-//     const interval = setInterval(() => {
-//       socket.emit("save-note-changes", JSON.stringify(value))
-//     }, SAVE_INTERVAL_MS)
-
-//     return () => {
-//       clearInterval(interval)
-//     }
-//   }, [socket])
-
-useEffect(() => {
-    if (socket == null) return;
-
-    const handler = synchronizedData => {
-        setValue(synchronizedData)
+  const handleCursorChange = () => {
+    if(handleGetCursorPostion()){
+      socket.emit("send-cursor-position", {user: currentUser?._id, cursor: handleGetCursorPostion()});
     }
+  };
 
-    socket.on("receive-note-changes", handler)
-}, [socket])
+  const handleGetCursorPostion = () => {
+    if (quillRef.current) {
+      const quillInstance = quillRef.current.getEditor();
+
+      const cursorPosition = quillInstance.getSelection();
+      
+      if(cursorPosition) return cursorPosition
+
+      return null
+    }
+  }
+
+  useEffect(() => {
+    if (quillRef.current) {
+      const quillInstance = quillRef.current.getEditor();
+      const cursorsModule = new Cursors(quillInstance, { autoRegisterListener: true });
+      const cursorsNotInitialized = cursorsModule.cursors()?.length == 0
+      if(currentUser && cursorsModule && members.length && cursorsNotInitialized){
+        setCursorInstance(cursorsModule)
+        members.map(({full_name, _id}) => {
+          cursorsModule.createCursor(_id, full_name, getRandomColor());
+        })
+      }
+    }
+  }, [quillRef.current])
+
+  useEffect(() => {
+    if(!socket) return
+    const cursorHandler = ({ user, cursor }) => {
+      if (cursorInstance && cursor && user) {
+        if (user !== currentUser?._id) {
+          cursorInstance.moveCursor(user, cursor);
+        }
+      }
+    };
+
+    socket.on("receive-cursor-position", cursorHandler)
+  }, [cursorInstance])
 
   useEffect(() => {
     handleGetText()
@@ -106,6 +145,8 @@ useEffect(() => {
         <form className='my-2 flex justify-between' onSubmit={(e) => {
           e.preventDefault();
           handleSave({ data: value, title: title })
+          if(!socket) return
+          socket.emit("send-note-changes", value);
         }}>
           <div className='flex items-center'>
             <Typography className='text-2xl me-3'>Title:</Typography>
