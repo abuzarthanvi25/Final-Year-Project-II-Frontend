@@ -48,7 +48,7 @@ const Details = ({ bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide,
                                 key={index}
                                 {...props}
                                 action={
-                                    <Button variant="filled" size="sm">
+                                    <Button onClick={() => navigate("/dashboard/chats", {state: props._id})} variant="filled" size="sm">
                                         Chat
                                     </Button>
                                 }

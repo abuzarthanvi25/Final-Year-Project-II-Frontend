@@ -10,7 +10,7 @@ import CustomModal from '../modals'
 import AddChat from './add-chat'
 import { io } from "socket.io-client"
 
-const ChatMain = () => {
+const ChatMain = ({friend_id = '', clearHistory = () => {}}) => {
   const [loading, setLoading] = useState(false);
   const [chatsLocal, setChatsLocal] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
@@ -28,6 +28,26 @@ const ChatMain = () => {
   const token = get(userDetails, "token", null);
   const userId = get(userDetails, "user._id", null);
 
+  useEffect(() => {
+    handleGetChat()
+  }, [friend_id, chatsLocal])
+
+
+  const handleGetChat = () => {
+    if (!friend_id) return;
+  
+    const friendChat = chatsLocal.find(({ members, type }) => {
+      return (
+        type == "Personal" && members?.some(({ _id }) => _id === friend_id)
+      );
+    });
+  
+    if (!friendChat) return;
+  
+    setCurrentRoom(friendChat?._id);
+    clearHistory()
+  };
+  
   const handleGetChats = () => {
     try {
       if (!token) return;
