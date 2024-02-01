@@ -38,6 +38,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import { showSuccessToast } from '@/utils/toast-helpers';
 import { io } from "socket.io-client"
+import CustomAvatar from "../../components/custom-avatar"
 
 export function DashboardNavbar({setCurrentUser}) {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -248,7 +249,7 @@ export function DashboardNavbar({setCurrentUser}) {
           >
             <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
           </IconButton>
-          <Menu>
+          {/* <Menu>
             <MenuHandler>
               <IconButton variant="text" color="blue-gray">
                 <BellIcon className="h-5 w-5 text-blue-gray-500" />
@@ -325,12 +326,19 @@ export function DashboardNavbar({setCurrentUser}) {
                 </div>
               </MenuItem>
             </MenuList>
-          </Menu>
+          </Menu> */}
           <Menu animate={{mount: { y: 0 },unmount: { y: 25 }}} placement='right-start'>
             <MenuHandler>
-              <IconButton variant="text" color="blue-gray">
-                <UserIcon className="h-5 w-5 text-blue-gray-500" />
-              </IconButton>
+              <button className="w-fit">
+              <CustomAvatar
+                  name={fullName}
+                  isOnline={true}
+                  src={profile_picture}
+                  alt="userAvatar"
+                  size="sm"
+                  variant="circular"
+                />
+              </button>
             </MenuHandler>
             <MenuList className="w-max border-0">
               <MenuItem className="flex items-center gap-3">
