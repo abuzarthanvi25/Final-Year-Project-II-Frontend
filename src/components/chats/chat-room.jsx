@@ -20,24 +20,26 @@ const CustomTextField = styled(TextField)({
     },
   });
 
-const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama', handleBack = () => {}, receiverImg = '', handleDeleteMessage = () => {} }) => {
+const ChatRoom = ({ sender_id = "", room_id = "", receiver_id = '',receiverName = 'Muhammad Usama', handleBack = () => {}, receiverImg = '', handleDeleteMessage = () => {} }) => {
     // TODO: make this dynamic
     const [socketInstance, setSocket] = useState(null);
     const [allMessages, setAllMessages] = useState([]);
     const [inputValue, setInputValue] = useState("");
+    const [onlineUsers, setOnlineUsers] = useState([])
     const inputRef = useRef(null);
-
 
     useEffect(() => {
         const socket = io("http://localhost:5001/");
         setSocket(socket);
 
-        socket.emit("join room", room_id);
-        socket.emit("get room messages", room_id)
+        if(room_id){
+            socket.emit("join room", room_id);
+            socket.emit("get room messages", room_id)
+        }
 
-        socket.on('connect', () => {
-            console.log('Connected to the server');
-        });
+        socket.emit('get online users', room_id)
+
+        socket.on('receive online users', (users) => setOnlineUsers(users))
 
         socket.on('receive room messages', (messages) => {
             setAllMessages(messages);
@@ -55,6 +57,12 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
             }
         };
     }, [room_id])
+
+    const isOnline = () => {
+        if(!receiver_id) return
+
+        return onlineUsers.includes(receiver_id)
+    }
 
     const handleChange = (e) => {
         setInputValue(e.target?.value);
@@ -113,7 +121,9 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiverName = 'Muhammad Usama
                                     className="h-6 w-6"
                                 />
                             </IconButton>
-                            <CustomAvatar sx={{ borderRadius: '20px', cursor: 'pointer' }} src={receiverImg} name={receiverName} className={"mx-4"} />
+                            <div className="mx-4">
+                                <CustomAvatar isOnline={isOnline()} sx={{ borderRadius: '20px', cursor: 'pointer' }} src={receiverImg} name={receiverName} />
+                            </div>
                             <Typography className="text-3xl">{receiverName}</Typography>
                         </div>
                         <Divider />

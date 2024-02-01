@@ -8,13 +8,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { get } from 'lodash'
 import CustomModal from '../modals'
 import AddChat from './add-chat'
+import { io } from "socket.io-client"
 
 const ChatMain = () => {
   const [loading, setLoading] = useState(false);
   const [chatsLocal, setChatsLocal] = useState([]);
   const [currentRoom, setCurrentRoom] = useState(null);
-  const [chatDetails, setChatDetails] = useState({name: '', picture: ''});
+  const [chatDetails, setChatDetails] = useState({ name: '', picture: '', receiver_id: '' });
   const [open, setOpen] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState([])
 
   const dispatch = useDispatch();
   const { userDetails } = useSelector((state) => state.auth);
@@ -45,8 +47,17 @@ const ChatMain = () => {
       console.log(error);
     }
   }
+  
+  const handleConnectSocket = () => {
+    const socket = io("http://localhost:5001/");
 
-  useEffect(() => handleGetChats(), []);
+    socket.on("receive online users", (users) => setOnlineUsers(users))
+  }
+
+  useEffect(() => { 
+    handleGetChats()
+    handleConnectSocket()
+  }, []);
 
   useEffect(() => {
     if (allChatRooms) {
@@ -57,8 +68,10 @@ const ChatMain = () => {
   const handleChangeRoom = (room_id) => {
     setCurrentRoom(room_id);
   }
-  
-  const handleBack = () => setCurrentRoom(null)
+
+  const handleBack = () => {
+    setCurrentRoom(null)
+  }
 
   useEffect(() => {
     handleGetReceiver()
@@ -66,24 +79,25 @@ const ChatMain = () => {
 
   const handleGetReceiver = () => {
     const currentChat = chatsLocal.find((chatRoom) => chatRoom?._id == currentRoom);
-    
-    if(currentChat){
+
+    if (currentChat) {
       const type = get(currentChat, "type", '');
-      
-      if(type == 'Personal'){
+
+      if (type == 'Personal') {
         const members = get(currentChat, "members", []);
         const receiver = members.filter((member) => member?._id !== userId)
-  
-        if(receiver[0]){
-          setChatDetails({name: receiver[0].full_name, picture: receiver[0].profile_picture?.url})
+
+        if (receiver[0]) {
+          const currentReceiver = receiver[0]
+          setChatDetails({ name: currentReceiver.full_name, picture: currentReceiver.profile_picture?.url, receiver_id: currentReceiver._id })
         }
-      }else{
+      } else {
         const name = get(currentChat, "name", '');
         const image = get(currentChat, "image.url", '');
-        setChatDetails({name: name, picture: image});
+        setChatDetails({ name: name, picture: image });
       }
-    }else{
-      setChatDetails({name: '', picture: ''});
+    } else {
+      setChatDetails({ name: '', picture: '' });
     }
   }
 
@@ -116,7 +130,7 @@ const ChatMain = () => {
       dispatch(deleteMessageRequest({ token, message_id }))
         .then(unwrapResult)
         .then(() => {
-          if(typeof cb == 'function') cb();
+          if (typeof cb == 'function') cb();
         })
         .catch((err) => {
           showFaliureToast(err?.response?.data?.message)
@@ -156,9 +170,9 @@ const ChatMain = () => {
   return (
     <div className='flex bg-white rounded-xl'>
       <CustomModal open={open} onClose={handleClose}>
-        <AddChat handleAddChat={handleAddChat} friends={friends}/>
+        <AddChat handleAddChat={handleAddChat} friends={friends} />
       </CustomModal>
-      <ChatsList handleOpen={handleOpen} loading={loading} handleDeleteChatRoom={handleDeleteChatRoom} handleChangeRoom={handleChangeRoom} currentUser={userId} chats={chatsLocal ?? []}/>
+      <ChatsList onlineUsers={onlineUsers} handleOpen={handleOpen} loading={loading} handleDeleteChatRoom={handleDeleteChatRoom} handleChangeRoom={handleChangeRoom} currentUser={userId} chats={chatsLocal ?? []} />
       <ChatHome handleDeleteMessage={handleDeleteMessage} chatDetails={chatDetails} sender_id={userId} handleBack={handleBack} room_id={currentRoom} />
     </div>
   )

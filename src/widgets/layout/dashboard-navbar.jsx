@@ -37,6 +37,7 @@ import { addFriendRequest, getProfileDetailsRequest, searchUsersRequeast } from 
 import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import { showSuccessToast } from '@/utils/toast-helpers';
+import { io } from "socket.io-client"
 
 export function DashboardNavbar({setCurrentUser}) {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -70,12 +71,34 @@ export function DashboardNavbar({setCurrentUser}) {
   const [open, setOpen] = useState(false);
   const [searchedUsers, setSearchedUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [socketInstance, setSocketInstance] = useState(null)
 
   const token = get(userDetails, "token", null);
   const currentUser = get(userDetails, "user", null);
+  const user_id = get(userDetails, "user._id", null);
   const currentFriends = get(profileDetails, "friends", []);
   const fullName = get(profileDetails, "full_name", '');
   const profile_picture = get(profileDetails, "profile_picture.url", '');
+
+  useEffect(() => {
+    const socket = io("http://localhost:5001/");
+
+    socket.emit('set online', user_id)
+    socket.emit('get online users')
+    setSocketInstance(socket)
+
+    const handleBeforeUnload = () => {
+      socket.emit("disconnect room", user_id);
+      socket.emit('get online users')
+    };
+
+    //NOTE - Handle logic for tab/window close event for online/offline status
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [])
 
   useEffect(() => {
     if(currentUser){
@@ -107,6 +130,10 @@ export function DashboardNavbar({setCurrentUser}) {
   const handleLogout = () => {
     dispatcher(logoutUserRequest())
     .then(() => {
+      if(socketInstance){
+        socketInstance.emit("disconnect room", user_id)
+        socketInstance.emit("get online users")
+      }
       navigate("/")
     })
     .catch(err => console.log(err))

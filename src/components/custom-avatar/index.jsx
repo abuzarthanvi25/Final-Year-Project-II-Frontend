@@ -1,7 +1,7 @@
 import { Avatar } from '@mui/material';
 import React from 'react';
 
-const UserAvatar = ({ src, name = '', className, ...rest }) => {
+const UserAvatar = ({ src, name = '', isOnline = null, className, ...rest }) => {
   const hasProfileImage = src !== null && src !== undefined && src !== '';
 
   const getInitials = (fullName) => {
@@ -13,15 +13,20 @@ const UserAvatar = ({ src, name = '', className, ...rest }) => {
   };
 
   return (
-    <Avatar
-      {...rest}
-      sizes='large'
-      src={hasProfileImage ? src : 'undefined'}
-      alt={name}
-      className={`shadow-lg shadow-blue-gray-500/25 ${className}`}
-    >
-      {!hasProfileImage && getInitials(name)}
-    </Avatar>
+    <div className='relative'>
+      <Avatar
+        {...rest}
+        sizes='large'
+        src={hasProfileImage ? src : 'undefined'}
+        alt={name}
+        className={`shadow-lg shadow-blue-gray-500/25 ${className}`}
+      >
+        {!hasProfileImage && getInitials(name)}
+      </Avatar>
+      {
+        isOnline !== null && <div style={{height: '13px', width:'13px'}} className={`border-2 ${isOnline ? "bg-green-400" : "bg-gray-500"} absolute -bottom-1 right-0 rounded-xl`}></div>
+      }
+    </div>
   );
 };
 
