@@ -329,7 +329,7 @@ export function DashboardNavbar({setCurrentUser}) {
           </Menu> */}
           <Menu animate={{mount: { y: 0 },unmount: { y: 25 }}} placement='right-start'>
             <MenuHandler>
-              <button className="w-fit">
+              <button className="w-fit mx-3">
               <CustomAvatar
                   name={fullName}
                   isOnline={true}

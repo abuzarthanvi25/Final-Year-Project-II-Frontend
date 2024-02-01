@@ -24,7 +24,7 @@ const UserAvatar = ({ src, name = '', isOnline = null, className, ...rest }) => 
         {!hasProfileImage && getInitials(name)}
       </Avatar>
       {
-        isOnline !== null && <div style={{height: '13px', width:'13px'}} className={`border-2 ${isOnline ? "bg-green-400" : "bg-gray-500"} absolute -bottom-1 right-0 rounded-xl`}></div>
+        isOnline !== null && <div style={{height: '14px', width:'14px'}} className={`border-2 ${isOnline ? "bg-green-500" : "bg-gray-500"} absolute -bottom-1 right-0 rounded-xl`}></div>
       }
     </div>
   );
