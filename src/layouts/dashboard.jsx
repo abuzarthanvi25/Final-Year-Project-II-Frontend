@@ -13,10 +13,13 @@ import Notes from "@/pages/dashboard/courses/id";
 import NoteEditor from "@/pages/dashboard/notes/note-editor";
 import CreateNote from "@/components/notes/create-note";
 import NoteDetails from "../pages/dashboard/notes/id";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
+  const [currentUser, setCurrentUser] = useState(null)
 
   return (
     <div className="min-h-screen bg-blue-gray-50/50">
@@ -27,7 +30,7 @@ export function Dashboard() {
         }
       />
       <div className="p-4 xl:ml-80">
-        <DashboardNavbar />
+        <DashboardNavbar setCurrentUser={setCurrentUser} />
         <Configurator />
         <IconButton
           size="lg"
@@ -49,8 +52,8 @@ export function Dashboard() {
 
           <Route exact path={'/courses/:id'} element={<Notes/>} />
           <Route exact path={'/group-courses/:id'} element={<Notes/>} />
-          <Route path={'/notes/edit/:id'} element={<NoteEditor courseType={"Personal"}/>} />
-          <Route path={'/group-notes/edit/:id'} element={<NoteEditor courseType={"Group"}/>} />
+          <Route path={'/notes/edit/:id'} element={<NoteEditor currentUser={currentUser} courseType={"Personal"}/>} />
+          <Route path={'/group-notes/edit/:id'} element={<NoteEditor currentUser={currentUser} courseType={"Group"}/>} />
           <Route path={'/notes/create-note'} element={<CreateNote/>} />
         </Routes>
         {/* <div className="text-blue-gray-600">

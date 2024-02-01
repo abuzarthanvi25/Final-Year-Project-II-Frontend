@@ -66,3 +66,23 @@ export const isCurrentUser = (senderId, currentUserId) => {
 
   return senderId == currentUserId
 }
+
+export const getRandomColor = () => {
+  const characters = '0123456789ABCDEF';
+  let color = '#';
+
+  // Generate a random color
+  for (let i = 0; i < 6; i++) {
+    color += characters[Math.floor(Math.random() * 16)];
+  }
+
+  // Check if the newly generated color is different from the previous one
+  if (color === getRandomColor.previousColor) {
+    return getRandomColor(); // Recursively call the function to get a different color
+  }
+
+  // Save the current color for future comparison
+  getRandomColor.previousColor = color;
+
+  return color;
+}
