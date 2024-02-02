@@ -5,7 +5,7 @@ import ChatSkeleton from './chat-skeleton'
 import "./chat-list.css"
 import { SquaresPlusIcon } from '@heroicons/react/24/solid'
 
-const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { }, handleDeleteChatRoom = () => {}, loading = false, handleOpen = () => {} }) => {
+const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { }, handleDeleteChatRoom = () => {}, loading = false, handleOpen = () => {}, onlineUsers = [] }) => {
 
   const handleGetReceiver = (members) => {
     if(!members || !Array.isArray(members) || !currentUser) return "";
@@ -39,6 +39,33 @@ const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { }, hand
     return name;
   }
 
+  const handleId = (type, members) => {
+    if(!type) return ''
+
+    if(type !== 'Group') {
+      return handleGetReceiver(members)?._id
+    }
+
+    return ''
+  }
+
+  const isOnline = (userId) => {
+    if(typeof userId !== 'string') return false;
+
+    return onlineUsers.includes(userId);
+
+  }
+
+  const isReceiverOnline = (type, members) => {
+    if(typeof type !== 'string' || members.length == 0) return false;
+
+    const receiver_id = handleId(type, members);
+
+    if(!receiver_id) return false
+
+    return isOnline(receiver_id);
+  }
+
   return (
     <div className='w-full px-0 py-3 flex flex-col items-center'>
       <div className='my-2'>
@@ -60,7 +87,7 @@ const ChatsList = ({ chats = [], currentUser, handleChangeRoom = () => { }, hand
             loading ? ([1,2,3,4,5,6].map((item) => (<ChatSkeleton key={item}/>))) :
             !!chats.length ?
             chats.map(({ type, name, _id, members, image }, i) => (
-              <GroupChatCardSmall members={members} loading={loading} handleDeleteChatRoom={() => handleDeleteChatRoom(_id)} handleChangeRoom={() => handleChangeRoom(_id)} key={i} previewImage={handlePicture(type, image, members)} name={handleName(type, name, members)} type={type} />
+              <GroupChatCardSmall isOnline={isReceiverOnline(type, members)} members={members} loading={loading} handleDeleteChatRoom={() => handleDeleteChatRoom(_id)} handleChangeRoom={() => handleChangeRoom(_id)} key={i} previewImage={handlePicture(type, image, members)} name={handleName(type, name, members)} type={type} />
             )) :
             <div className='w-full h-full flex justify-center items-center'><Typography className='text-sm'>No Chats Found</Typography></div>
           }

@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
 import Divider from '@mui/material/Divider';
 import NotesCardSmallSkeleton from '@/components/notes/skeleton-notes-card-small';
+import useEffectOnce from '@/hooks/useEffectOnce';
 
 const NotesList = () => {
   const params = useParams();
@@ -85,7 +86,7 @@ const NotesList = () => {
 
   }
 
-  useEffect(() => handleGetNotes(), [])
+  useEffectOnce(() => handleGetNotes())
 
   useEffect(() => {
     if (notes) {

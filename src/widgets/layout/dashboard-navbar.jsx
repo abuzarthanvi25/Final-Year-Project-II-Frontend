@@ -37,6 +37,9 @@ import { addFriendRequest, getProfileDetailsRequest, searchUsersRequeast } from 
 import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import { showSuccessToast } from '@/utils/toast-helpers';
+import { io } from "socket.io-client"
+import CustomAvatar from "../../components/custom-avatar"
+import useEffectOnce from "@/hooks/useEffectOnce";
 
 export function DashboardNavbar({setCurrentUser}) {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -70,12 +73,34 @@ export function DashboardNavbar({setCurrentUser}) {
   const [open, setOpen] = useState(false);
   const [searchedUsers, setSearchedUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [socketInstance, setSocketInstance] = useState(null)
 
   const token = get(userDetails, "token", null);
   const currentUser = get(userDetails, "user", null);
+  const user_id = get(userDetails, "user._id", null);
   const currentFriends = get(profileDetails, "friends", []);
   const fullName = get(profileDetails, "full_name", '');
   const profile_picture = get(profileDetails, "profile_picture.url", '');
+
+  useEffectOnce(() => {
+    const socket = io("http://localhost:5001/");
+
+    socket.emit('set online', user_id)
+    socket.emit('get online users')
+    setSocketInstance(socket)
+
+    const handleBeforeUnload = () => {
+      socket.emit("disconnect room", user_id);
+      socket.emit('get online users')
+    };
+
+    //NOTE - Handle logic for tab/window close event for online/offline status
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  })
 
   useEffect(() => {
     if(currentUser){
@@ -107,6 +132,10 @@ export function DashboardNavbar({setCurrentUser}) {
   const handleLogout = () => {
     dispatcher(logoutUserRequest())
     .then(() => {
+      if(socketInstance){
+        socketInstance.emit("disconnect room", user_id)
+        socketInstance.emit("get online users")
+      }
       navigate("/")
     })
     .catch(err => console.log(err))
@@ -221,7 +250,7 @@ export function DashboardNavbar({setCurrentUser}) {
           >
             <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
           </IconButton>
-          <Menu>
+          {/* <Menu>
             <MenuHandler>
               <IconButton variant="text" color="blue-gray">
                 <BellIcon className="h-5 w-5 text-blue-gray-500" />
@@ -298,12 +327,19 @@ export function DashboardNavbar({setCurrentUser}) {
                 </div>
               </MenuItem>
             </MenuList>
-          </Menu>
+          </Menu> */}
           <Menu animate={{mount: { y: 0 },unmount: { y: 25 }}} placement='right-start'>
             <MenuHandler>
-              <IconButton variant="text" color="blue-gray">
-                <UserIcon className="h-5 w-5 text-blue-gray-500" />
-              </IconButton>
+              <button className="w-fit mx-3">
+              <CustomAvatar
+                  name={fullName}
+                  isOnline={true}
+                  src={profile_picture}
+                  alt="userAvatar"
+                  size="sm"
+                  variant="circular"
+                />
+              </button>
             </MenuHandler>
             <MenuList className="w-max border-0">
               <MenuItem className="flex items-center gap-3">

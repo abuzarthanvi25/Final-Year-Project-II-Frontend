@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
 import { conversationsData, projectsData } from "@/data";
 import { truncateString } from '@/utils/helpers';
+import CustomAvatar from "../../../../components/custom-avatar"
 
 const Details = ({ bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).", full_name = "Alec M. Thompson", email = "alecthompson@mail.com", phone_number = "(44) 123 1234 123", friends = conversationsData, loading, courses = [] }) => {
 
@@ -48,7 +49,7 @@ const Details = ({ bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide,
                                 key={index}
                                 {...props}
                                 action={
-                                    <Button variant="filled" size="sm">
+                                    <Button onClick={() => navigate("/dashboard/chats", {state: props._id})} variant="filled" size="sm">
                                         Chat
                                     </Button>
                                 }
@@ -64,9 +65,9 @@ const Details = ({ bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide,
                     </Typography>
                     <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-4">
                         {courses.map(
-                            ({ img = '/img/home-decor-1.jpeg', title, description, type, _id, members }, index) => (
-                                <Card key={index} color="transparent" shadow={false}>
-                                    <CardHeader
+                            ({ img = '/img/vecteezy_abstract-boxes-background-modern-technology-with-square_8171873.jpg', title, description, type, _id, members }, index) => (
+                                <Card className='bg-auto p-3 border-2 shadow-md' style={{backgroundImage:"url(/img/banner2.png)"}} key={index} color="transparent" shadow={false}>
+                                    {/* <CardHeader
                                         floated={false}
                                         color="gray"
                                         className="mx-0 mt-0 mb-4 h-64 xl:h-28"
@@ -76,7 +77,7 @@ const Details = ({ bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide,
                                             alt={title}
                                             className="h-full w-full object-cover"
                                         />
-                                    </CardHeader>
+                                    </CardHeader> */}
                                     <CardBody className="py-0 px-1">
                                         <Typography
                                             variant="small"
@@ -96,7 +97,7 @@ const Details = ({ bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide,
                                         </div>}>
                                             <Typography
                                                 variant="small"
-                                                className="font-normal text-blue-gray-500"
+                                                className="font-normal text-blue-gray-900"
                                             >
                                                 {truncateString(description, 80)}
                                             </Typography>
@@ -106,20 +107,6 @@ const Details = ({ bio = "Hi, I'm Alec Thompson, Decisions: If you can't decide,
                                         <Button onClick={() => { navigate(`/dashboard/courses/${_id}`) }} variant="filled" size="sm">
                                             View Notes
                                         </Button>
-                                        <div>
-                                            {members.map(({ img, name }, key) => (
-                                                <Tooltip key={key} content={name}>
-                                                    <Avatar
-                                                        src={img}
-                                                        alt={name}
-                                                        size="xs"
-                                                        variant="circular"
-                                                        className={`cursor-pointer border-2 border-white ${key === 0 ? "" : "-ml-2.5"
-                                                            }`}
-                                                    />
-                                                </Tooltip>
-                                            ))}
-                                        </div>
                                     </CardFooter>
                                 </Card>
                             )

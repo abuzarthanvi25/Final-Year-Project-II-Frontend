@@ -3,12 +3,12 @@ import React from 'react'
 import CustomAvatar from "../custom-avatar"
 import { EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/24/solid'
 
-const ListCardSmall = ({ loading=false, previewImage = "", name = "Babu Bhai", type = 'Personal', handleChangeRoom = () => { }, handleDeleteChatRoom = () => {} }) => {
+const ListCardSmall = ({ loading=false, previewImage = "", name = "Babu Bhai", type = 'Personal', handleChangeRoom = () => { }, handleDeleteChatRoom = () => {}, isOnline = false }) => {
     return (
         <div style={{pointerEvents: loading ? 'none' : 'all'}} className='flex items-center justify-between w-full my-2 ms-3 me-1 px-4 py-1 cursor-pointer bg-white rounded-md'>
 
             <div onClick={handleChangeRoom} className='flex'>
-                <CustomAvatar sx={{ borderRadius: '10px' }} src={previewImage} name={name} className={"shadow-lg shadow-blue-gray-500/25"} />
+                <CustomAvatar isOnline={type == 'Group' ? null : isOnline} src={previewImage} name={name} className={"shadow-lg shadow-blue-gray-500/25"} />
                 <div className='ms-4'>
                     <Typography className='text-sm font-medium'>{name}</Typography>
                     <Typography style={{ fontSize: '10px' }} className='font-extralight'>{type} Chat</Typography>

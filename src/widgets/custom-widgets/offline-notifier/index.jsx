@@ -1,10 +1,11 @@
+import useEffectOnce from "@/hooks/useEffectOnce";
 import { Typography } from "@material-tailwind/react";
 import { useState, useEffect } from "react";
 
 const OfflineNotifier = () => {
   const [isOnline, setIsOnline] = useState(true);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     function handleOffline() {
       setIsOnline(false);
     }
@@ -20,7 +21,7 @@ const OfflineNotifier = () => {
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("online", handleOnline);
     };
-  }, []);
+  });
 
   if (isOnline) {
     return null;

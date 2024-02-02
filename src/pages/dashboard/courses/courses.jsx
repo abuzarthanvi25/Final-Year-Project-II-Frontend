@@ -2,6 +2,7 @@ import AddCourse from '@/components/course/add-course/course-form';
 import GroupCourse from '@/components/course/add-course/group-course-form';
 import CourseCard from "@/components/course/course-card/course-card";
 import CustomModal from '@/components/modals';
+import useEffectOnce from '@/hooks/useEffectOnce';
 import { getAllCoursesRequest, addCourseRequest, deleteCourseRequest, updateCourseRequest } from "@/store/reducers/course-reducer";
 import { showFaliureToast, showSuccessToast } from '@/utils/toast-helpers';
 import { Button, Typography } from "@material-tailwind/react";
@@ -54,9 +55,9 @@ export function Courses({ type }) {
         }
     }
 
-    useEffect(() => {
+    useEffectOnce(() => {
         handleGetCourses();
-    }, [])
+    })
 
     const handleViewNotes = (id, course_title) => {
         if (type == 'Personal') {

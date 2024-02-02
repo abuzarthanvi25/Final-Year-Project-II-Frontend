@@ -26,6 +26,7 @@ import { Skeleton } from '@mui/material';
 import { logoutUserRequest } from '@/store/reducers/auth-reducer';
 import { useNavigate } from 'react-router-dom';
 import { objectToFormData } from "@/utils/helpers";
+import useEffectOnce from "@/hooks/useEffectOnce";
 
 export function Profile() {
   const dispatch = useDispatch();
@@ -47,9 +48,9 @@ export function Profile() {
   const friends = get(profileDetailsLocal, "friends", []);
   const courses = get(profileDetailsLocal, "courses", []);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     handleGetProfile()
-  }, [])
+  })
 
   useEffect(() => {
     if (profileDetails) {
@@ -133,8 +134,8 @@ export function Profile() {
 
   return (
     <>
-      <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url('/img/background-image.png')] bg-cover	bg-center">
-        <div className="absolute inset-0 h-full w-full bg-gray-900/75" />
+      <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url('/img/background-image.png')] bg-contain	bg-center">
+        <div className="absolute inset-0 h-full w-full bg-gray-900/20" />
       </div>
       <Card className="mx-3 -mt-16 mb-6 lg:mx-4 border border-blue-gray-100">
         <CardBody className="p-4">

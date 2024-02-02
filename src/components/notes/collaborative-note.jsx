@@ -13,6 +13,7 @@ import { io } from "socket.io-client"
 import { useParams } from 'react-router-dom';
 import Cursors from 'quill-cursors';
 import { getRandomColor } from '@/utils/helpers';
+import useEffectOnce from '@/hooks/useEffectOnce';
 
 const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageToNote, currentUser, members = [] }) => {
   const [value, setValue] = useState('');
@@ -59,14 +60,14 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
     socket.emit("get-note-content", note_id);
   }
 
-  useEffect(() => {
+  useEffectOnce(() => {
     const socket = io("http://localhost:5001/");
 
     handleGetInitialData(socket)
     handleSynchronizeChanges(socket)
 
     setSocket(socket)
-  }, [])
+  })
 
   const handleCursorChange = () => {
     if (handleGetCursorPostion()) {
