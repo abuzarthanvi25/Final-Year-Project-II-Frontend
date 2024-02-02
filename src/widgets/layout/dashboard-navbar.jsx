@@ -39,6 +39,7 @@ import { get } from 'lodash';
 import { showSuccessToast } from '@/utils/toast-helpers';
 import { io } from "socket.io-client"
 import CustomAvatar from "../../components/custom-avatar"
+import useEffectOnce from "@/hooks/useEffectOnce";
 
 export function DashboardNavbar({setCurrentUser}) {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -81,7 +82,7 @@ export function DashboardNavbar({setCurrentUser}) {
   const fullName = get(profileDetails, "full_name", '');
   const profile_picture = get(profileDetails, "profile_picture.url", '');
 
-  useEffect(() => {
+  useEffectOnce(() => {
     const socket = io("http://localhost:5001/");
 
     socket.emit('set online', user_id)
@@ -99,7 +100,7 @@ export function DashboardNavbar({setCurrentUser}) {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [])
+  })
 
   useEffect(() => {
     if(currentUser){

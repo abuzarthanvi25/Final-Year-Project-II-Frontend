@@ -1,3 +1,4 @@
+import useEffectOnce from "@/hooks/useEffectOnce";
 import {
     Card,
 } from "@material-tailwind/react";
@@ -31,11 +32,15 @@ export function NoteDetails() {
         socket.emit("send-note-changes", value);
     }
 
-    useEffect(() => {
+    useEffectOnce(() => {
         const socket = io("http://localhost:5001/");
 
         setSocket(socket)
-    }, [])
+
+        return () => {
+            socket.disconnect();
+        }
+    })
 
     useEffect(() => {
         if (socket == null) return;

@@ -28,7 +28,7 @@ const NotesCardSmall = ({ profile_picture = '', full_name = '', title = 'Shit No
                         </Tooltip>
                         <DocumentIcon
                             strokeWidth={2}
-                            fill="#006291"
+                            fill="#8E8E8E"
                             style={{ borderRadius: '5px' }}
                             className="h-6 w-6"
                         />

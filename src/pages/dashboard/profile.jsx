@@ -26,6 +26,7 @@ import { Skeleton } from '@mui/material';
 import { logoutUserRequest } from '@/store/reducers/auth-reducer';
 import { useNavigate } from 'react-router-dom';
 import { objectToFormData } from "@/utils/helpers";
+import useEffectOnce from "@/hooks/useEffectOnce";
 
 export function Profile() {
   const dispatch = useDispatch();
@@ -47,9 +48,9 @@ export function Profile() {
   const friends = get(profileDetailsLocal, "friends", []);
   const courses = get(profileDetailsLocal, "courses", []);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     handleGetProfile()
-  }, [])
+  })
 
   useEffect(() => {
     if (profileDetails) {

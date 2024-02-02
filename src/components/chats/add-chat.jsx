@@ -4,6 +4,7 @@ import MemberDetailsSmall from '../search-users/member-component-sm';
 import { useFormik } from 'formik';
 import { CircularProgress, TextField } from '@mui/material';
 import { AddChatInitialValues, AddChatValidationSchema } from '@/utils/validations/chat-validations';
+import useEffectOnce from '@/hooks/useEffectOnce';
 
 const AddChat = ({friends = [], previousData = null, loading = false, handleAddChat = () => {}}) => {
 
@@ -15,12 +16,12 @@ const AddChat = ({friends = [], previousData = null, loading = false, handleAddC
         }
     })
 
-    useEffect(() => {
+    useEffectOnce(() => {
         if(previousData){
           formik.setFieldValue('members', previousData?.members);
           formik.setFieldValue('name', previousData?.name || '');
         }
-      }, [])
+      })
 
       const handleAddMember = (_id) => {
         formik.setValues({

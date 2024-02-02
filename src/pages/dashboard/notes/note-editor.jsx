@@ -7,6 +7,7 @@ import { getNoteDetailsRequest, summarizeNoteRequest, updateNoteRequest, imageTo
 import { unwrapResult } from '@reduxjs/toolkit';
 import { showFaliureToast } from '@/utils/toast-helpers';
 import { useDispatch, useSelector } from 'react-redux';
+import useEffectOnce from '@/hooks/useEffectOnce';
 
 const NoteEditor = ({ courseType, currentUser = null }) => {
   const { state } = useLocation();
@@ -50,11 +51,11 @@ const NoteEditor = ({ courseType, currentUser = null }) => {
     }
   }
 
-  useEffect(() => {
+  useEffectOnce(() => {
     if(courseType == 'Group') return
 
     handleGetNoteDetails()
-  }, [])
+  })
 
   const handleEditNote = (updatedContent) => {
     const body = {

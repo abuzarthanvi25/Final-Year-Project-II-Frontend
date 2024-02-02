@@ -9,6 +9,7 @@ import { get } from 'lodash'
 import CustomModal from '../modals'
 import AddChat from './add-chat'
 import { io } from "socket.io-client"
+import useEffectOnce from '@/hooks/useEffectOnce'
 
 const ChatMain = ({friend_id = '', clearHistory = () => {}}) => {
   const [loading, setLoading] = useState(false);
@@ -74,10 +75,10 @@ const ChatMain = ({friend_id = '', clearHistory = () => {}}) => {
     socket.on("receive online users", (users) => setOnlineUsers(users))
   }
 
-  useEffect(() => { 
+  useEffectOnce(() => { 
     handleGetChats()
     handleConnectSocket()
-  }, []);
+  });
 
   useEffect(() => {
     if (allChatRooms) {

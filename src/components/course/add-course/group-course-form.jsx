@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import MemberDetailsSmall from '../../../components/search-users/member-component-sm';
 import { useSelector } from 'react-redux';
 import { get } from 'lodash';
+import useEffectOnce from '@/hooks/useEffectOnce';
 
 const AddCourse = ({ loading = false, handleAddCourse = () => { }, previousData = null, type }) => {
 
@@ -23,13 +24,13 @@ const AddCourse = ({ loading = false, handleAddCourse = () => { }, previousData 
         }
     })
 
-    useEffect(() => {
+    useEffectOnce(() => {
         if(previousData){
           formik.setFieldValue('title', previousData?.title);
           formik.setFieldValue('description', previousData?.description);
           formik.setFieldValue('members', previousData?.members);
         }
-      }, [])
+      })
 
 
     const handleAddMember = (_id) => {

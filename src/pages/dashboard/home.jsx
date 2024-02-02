@@ -32,6 +32,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { get } from 'lodash';
+import useEffectOnce from "@/hooks/useEffectOnce";
 
 export function Home() {
   const dispatch = useDispatch();
@@ -64,9 +65,9 @@ export function Home() {
     }
   }
 
-  useEffect(() => {
+  useEffectOnce(() => {
     handleGetProfile()
-  }, [])
+  })
 
   return (
     <div className="mt-12">

@@ -1,3 +1,4 @@
+import useEffectOnce from '@/hooks/useEffectOnce';
 import { addCourseInitialValues, addCourseValidationSchema } from '@/utils/validations/course-validations';
 import { Button, Typography } from '@material-tailwind/react';
 import { CircularProgress, TextField } from '@mui/material'
@@ -14,12 +15,12 @@ const AddCourse = ({loading = false, handleAddCourse = () => {}, previousData = 
         }
       })
 
-      useEffect(() => {
+      useEffectOnce(() => {
         if(previousData){
           formik.setFieldValue('title', previousData?.title);
           formik.setFieldValue('description', previousData?.description);
         }
-      }, [])
+      })
 
   return (
     <section className='w-full p-3'>
