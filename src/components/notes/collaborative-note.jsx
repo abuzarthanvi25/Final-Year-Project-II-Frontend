@@ -36,6 +36,7 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
   const handleOnChange = (content, _, source, editor) => {
     if (socket == null || source !== "user") return;
     handleCursorChange();
+    setValue(content)
     socket.emit("send-note-changes", content);
   }
 
