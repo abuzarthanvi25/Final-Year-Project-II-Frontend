@@ -22,6 +22,7 @@ const CONSTANT = {
     getChatRooms: '/get-chat-rooms',
     deleteChatRoom: '/delete-chat-room',
     deleteMessage: '/delete-message',
+    getDashboardStatistics: '/dashboard'
   }
   
   export default CONSTANT

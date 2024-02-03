@@ -29,7 +29,7 @@ const ChatRoom = ({ sender_id = "", room_id = "", receiver_id = '',receiverName 
     const inputRef = useRef(null);
 
     useEffect(() => {
-        const socket = io("http://localhost:5001/");
+        const socket = io(import.meta.env.VITE_FRONTEND_URL);
         setSocket(socket);
 
         if(room_id){

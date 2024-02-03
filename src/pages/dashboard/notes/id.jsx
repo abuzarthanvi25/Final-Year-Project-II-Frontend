@@ -33,7 +33,7 @@ export function NoteDetails() {
     }
 
     useEffectOnce(() => {
-        const socket = io("http://localhost:5001/");
+        const socket = io(import.meta.env.VITE_FRONTEND_URL);
 
         setSocket(socket)
 

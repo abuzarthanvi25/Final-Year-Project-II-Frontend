@@ -22,7 +22,12 @@ const UserDetailsSmall = ({email = '', full_name = '', profile_picture = '', loa
         </div>
       </div>
       {
-        isAlreadyFriend ? <div className='w-4/12 flex justify-around items-center shadow-md bg-gray-600 px-3 py-2 rounded-md'><Typography className='font-sans font-bold text-xs align-middle text-center text-white uppercase'>Friend</Typography><DoneAllIcon style={{color:'#00CA06'}} className='text-xs'/></div> : 
+        isAlreadyFriend ? 
+        <div className='w-4/12 flex justify-around items-center shadow-md bg-gray-600 px-3 py-2 rounded-md'>
+          <Typography style={{letterSpacing:'1px'}} className='font-sans font-bold text-xs align-middle text-center text-white uppercase'>Friend</Typography>
+          <DoneAllIcon style={{color:'#00CA06'}} className='text-xs'/>
+          </div>
+          : 
         <Button onClick={handleAddFriend} disabled={loading || isAlreadyFriend} className='w-4/12' variant="filled" size="sm">
         {loading ? <CircularProgress className='text-xs' style={{color:'#fff', width:'14px', height:'14px'}}/> : "Add Friend"}
   </Button>

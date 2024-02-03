@@ -83,7 +83,7 @@ export function DashboardNavbar({setCurrentUser}) {
   const profile_picture = get(profileDetails, "profile_picture.url", '');
 
   useEffectOnce(() => {
-    const socket = io("http://localhost:5001/");
+    const socket = io(import.meta.env.VITE_FRONTEND_URL);
 
     socket.emit('set online', user_id)
     socket.emit('get online users')

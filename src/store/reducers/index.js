@@ -4,6 +4,7 @@ import UserReducer from './user-reducer';
 import CourseReducer from "./course-reducer"
 import NoteReducer from "./note-reducer"
 import ChatReducer from "./chat-reducer"
+import DashboardReducer from "./dashboard-reducer"
 
 // Concatenate all reducers
 
@@ -12,5 +13,6 @@ export const rootReducer = combineReducers({
   user: UserReducer,
   courses: CourseReducer,
   notes: NoteReducer,
-  chats: ChatReducer
+  chats: ChatReducer,
+  dashboard: DashboardReducer
 })
