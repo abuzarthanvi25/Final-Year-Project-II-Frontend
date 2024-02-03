@@ -35,6 +35,7 @@ export function Home() {
   const navigate = useNavigate();
   const { userDetails } = useSelector((state) => state.auth)
   const { statistics } = useSelector((state) => state.dashboard)
+  
   const token = get(userDetails, 'token', null);
 
   const totalPersonalCourses = get(statistics, 'totalPersonalCourses', 0);
