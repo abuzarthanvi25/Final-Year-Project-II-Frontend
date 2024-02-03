@@ -33,7 +33,7 @@ export function NoteDetails() {
     }
 
     useEffectOnce(() => {
-        const socket = io(import.meta.env.VITE_FRONTEND_URL);
+        const socket = io(import.meta.env.VITE_BACKEND_URL);
 
         setSocket(socket)
 

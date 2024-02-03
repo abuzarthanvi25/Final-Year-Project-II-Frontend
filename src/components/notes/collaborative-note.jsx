@@ -61,7 +61,7 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
   }
 
   useEffectOnce(() => {
-    const socket = io(import.meta.env.VITE_FRONTEND_URL);
+    const socket = io(import.meta.env.VITE_BACKEND_URL);
 
     handleGetInitialData(socket)
     handleSynchronizeChanges(socket)
