@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { get } from 'lodash';
 import useEffectOnce from "@/hooks/useEffectOnce";
-import { Grid } from "@mui/material";
+import { Grid, Skeleton } from "@mui/material";
 import { getDashboardStatisticsRequest } from "@/store/reducers/dashboard-reducer";
 import {
   UserGroupIcon,
@@ -27,7 +27,7 @@ import {
   DocumentIcon,
   RectangleGroupIcon
 } from "@heroicons/react/24/solid";
-import React from "react";
+import React, { useState } from "react";
 import CustomTable from "@/components/custom-table";
 
 export function Home() {
@@ -43,6 +43,9 @@ export function Home() {
   const allNotesOfCurrentUserSummarized = get(statistics, 'allNotesOfCurrentUserSummarized', 0);
   const personalCourses = get(statistics, 'personalCourses', []);
   const groupCourses = get(statistics, 'groupCourses', []);
+
+
+  const [loading, setLoading] = useState(false);
 
   const statisticsData = [
     {
@@ -98,6 +101,7 @@ export function Home() {
   const handleGetDashboardStatistics = () => {
     try {
       if (token) {
+        setLoading(true)
         dispatch(getDashboardStatisticsRequest({ token }))
           .then(unwrapResult)
           .catch(err => {
@@ -106,6 +110,7 @@ export function Home() {
               handleLogout();
             }
           })
+          .finally(() => setLoading(false))
       }
     } catch (error) {
       console.log(error);
@@ -139,7 +144,10 @@ export function Home() {
           </Grid>
         </Grid>
         <Grid style={{ height: '42vh' }} item xs={12} md={6} lg={6} xl={6}>
-          <iframe className="rounded-xl h-full pointer-events-none" src="https://flipclock.tk/" width={"100%"}></iframe>
+          {
+            loading ? <Skeleton style={{height:'100%'}} variant='rectangular rounded-xl' className='' width={"100%"} /> :
+          <iframe onLoadStart={() => setLoading(true)} onLoadedData={() => setLoading(false)} className="rounded-xl h-full pointer-events-none" src="https://flipclock.tk/" width={"100%"}></iframe>
+          }
         </Grid>
         <Grid item xs={12} md={6}>
           <div className="mb-4">

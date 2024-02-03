@@ -69,16 +69,18 @@ const Note = ({ handleSave, loading, previousData, handleSummarize, handleImageT
           e.preventDefault();
           handleSave({ data: value, title: title })
         }}>
-          <div className='flex items-center'>
-            <Typography className='text-2xl me-3'>Title:</Typography>
-            <Input disabled={loading} placeholder='Untitled' style={{padding: 0, textAlign:'left', minWidth:'40ch', paddingLeft:'10px'}} onChange={(e) => setTitle(e.target.value)} required defaultValue={title} variant='outlined' />
+          <div className='flex flex-row w-full justify-between flex-wrap'>
+            <div className='flex flex-row items-center'>
+              <Typography className='text-2xl me-3'>Title:</Typography>
+              <Input disabled={loading} placeholder='Untitled' style={{padding: 0, textAlign:'left', minWidth:'21vw', paddingLeft:'10px'}} onChange={(e) => setTitle(e.target.value)} required defaultValue={title} variant='outlined' />
+            </div>
+            <Button style={{ minWidth: '120px' }} disabled={loading} type='submit'>
+              {
+                loading ? <CircularProgress size={20} style={{ color: 'white' }} /> :
+                  'Save Changes'
+              }
+            </Button>
           </div>
-          <Button style={{ minWidth: '120px' }} disabled={loading} type='submit'>
-            {
-              loading ? <CircularProgress size={20} style={{ color: 'white' }} /> :
-                'Save Changes'
-            }
-          </Button>
         </form>
       </div>
       <div style={{pointerEvents: loading ? 'none' : 'all'}} className='mb-2'>
