@@ -35,6 +35,7 @@ const NoteEditor = ({ courseType, currentUser = null }) => {
     try {
       if (!token || !note_id) return;
 
+      setLoading(true);
       dispatch(getNoteDetailsRequest({ token, note_id }))
         .then(unwrapResult)
         .then((response) => {
