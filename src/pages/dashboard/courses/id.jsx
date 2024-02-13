@@ -109,22 +109,22 @@ const NotesList = () => {
     <div>
       <div className='w-full'>
         <Grid container spacing={3} className=''>
-          <Grid item md={2}>
-            <div>
+          <Grid item xs={12} sm={12} md={12}>
+            <div className=''>
               <Typography className='text-md text-left'>Create a note</Typography>
               <AddNoteCard handleAddNote={()=> navigate('/dashboard/notes/create-note', {state: {course_id, token}})} />
             </div>
           </Grid>
-          <Grid item md={12}>
+          <Grid item xs={12} sm={12} md={12}>
             <Divider component="div" />
-            <Typography className='text-left text-md mt-2'>Recent Notes</Typography>
+            <Typography className='text-center text-md mt-2'>Recent Notes</Typography>
           </Grid>
           {
             loading ? [1,2,3,4].map((_) => (
               <Grid key={_} item md={3}><NotesCardSmallSkeleton/></Grid>
             )) :
              notesLocal?.length ? notesLocal.map(({ title, updated_at, _id, data }, index) => (
-              <Grid key={index} item md={3}>
+              <Grid key={index} className='flex justify-center items-center' item xs={12} sm={4} md={3}>
                 <NotesCardSmall loading={loading} handleDelete={() => handleDeleteNote(_id)} handleClickNote={() => handleNavigateToNote(_id, title, updated_at, token, data, course_id)} profile_picture={profile_picture} full_name={full_name} title={title} updatedAt={formatDateNew(updated_at)} />
               </Grid>
             ))
