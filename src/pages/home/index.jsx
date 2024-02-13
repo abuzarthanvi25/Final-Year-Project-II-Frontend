@@ -49,7 +49,8 @@ export function Home() {
                                 Your story starts with us.
                             </Typography>
                             <Typography variant="lead" color="white" className="opacity-80">
-                                Explore the next generation of note-taking with our app. This isn't just a Landing Page; it's a gateway to an immersive experience powered by cutting-edge technology. Unleash the potential of AI, with intelligently crafted components inspired by the seamless fusion of Tailwind CSS and Material Design by Google.
+                                    Explore the next generation of note-taking with our app. 
+                                    Introducing our cutting-edge platform tailored for students seeking to enhance their academic journey with the power of artificial intelligence: AI Notes.  Moreover, AI Notes offers robust note management features, allowing students to organize, annotate, and collaborate on their notes effortlessly. With AI Notes, students can streamline their study process, maximize productivity, and achieve academic success like never before.
                             </Typography>
                         </div>
                     </div>

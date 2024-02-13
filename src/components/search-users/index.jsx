@@ -1,11 +1,35 @@
 import { Input, InputAdornment, CircularProgress, Skeleton } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserDetailsSmall from './user-component-sm';
 import { Typography } from '@material-tailwind/react';
+import useEffectOnce from '@/hooks/useEffectOnce';
 
 const SearchUsers = ({handleSearch = () => {}, loading = false, users = [], handleAddFriend = () => {}, isAlreadyFriend=false}) => {
     const [timeoutId, setTimeoutId] = useState();
+
+    const [minWidth, setMinWidth] = useState('40vw'); // Default value
+
+    useEffectOnce(() => {
+      const handleResize = () => {
+        const screenWidth = window.innerWidth;
+        if (screenWidth < 640) { // xs screens
+          setMinWidth('85vw');
+        } else if (screenWidth < 768) { // sm screens
+          setMinWidth('80vw');
+        } else if (screenWidth < 1024) { // sm screens
+            setMinWidth('80vw');
+        } else { // md screens and larger
+          setMinWidth('44vw');
+        }
+      };
+  
+      handleResize(); // Call initially
+      window.addEventListener('resize', handleResize); // Add event listener for resize
+  
+      return () => window.removeEventListener('resize', handleResize); // Remove event listener on component unmount
+    });
+  
 
     const onSearchChange = (e) => {
         clearTimeout(timeoutId);
@@ -14,7 +38,7 @@ const SearchUsers = ({handleSearch = () => {}, loading = false, users = [], hand
     };
 
   return (
-    <div style={{minWidth:'40vw'}}>
+    <div style={{ minWidth: minWidth }}>
       <Input className='mb-3' readOnly={loading} onChange={onSearchChange} type='search' placeholder='Search user by full name or email' startAdornment={ (
             <InputAdornment position="start">
                 {

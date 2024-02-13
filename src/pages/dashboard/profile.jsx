@@ -27,10 +27,12 @@ import { logoutUserRequest } from '@/store/reducers/auth-reducer';
 import { useNavigate } from 'react-router-dom';
 import { objectToFormData } from "@/utils/helpers";
 import useEffectOnce from "@/hooks/useEffectOnce";
+import useApiRequest from '@/hooks/useApiRequest';
 
 export function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { makeApiRequest } = useApiRequest(updateProfileRequet);
 
   const [loading, setLoading] = useState(false);
   const [profileDetailsLocal, setProfileDetailsLocal] = useState(null)
@@ -58,27 +60,18 @@ export function Profile() {
     }
   }, [profileDetails])
 
-  const handleEditProfile = (payload) => {
+  const handleEditProfile = async (payload) => {
     try {
-      if (token) {
-        const body = objectToFormData(payload)
+      if(!token) return;
+      
+      const body = objectToFormData(payload)
 
-        setLoading(true);
+      setLoading(true);
+      const [result] = await makeApiRequest({ token, body });
+      setLoading(false);
 
-        dispatch(updateProfileRequet({ token, body }))
-          .then(unwrapResult)
-          .then(() => {
-            handleGetProfile();
-            setLoading(false)
-          })
-          .catch(err => {
-            showFaliureToast(err?.response?.data?.message)
-            if (err?.response?.data?.message === 'User not found') {
-              handleLogout();
-            }
-            setLoading(false)
-          })
-
+      if(result){
+        handleGetProfile();
       }
     } catch (error) {
       console.log(error);
